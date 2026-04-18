@@ -279,8 +279,8 @@ tr.gap-row td.td-m{color:#c05a20;background:#fff5ee!important}
 <body>
 <div class="top-bar"><h1>KPI Dashboard 2026</h1><div class="top-meta">ABBA The Museum &amp; Avicii Experience &nbsp;·&nbsp; Jan–Dec 2026 &nbsp;·&nbsp; Last updated: March 2026 &nbsp;·&nbsp; YTD: Jan–Mar</div></div>
 <div class="brand-tabs">
-  <button class="brand-tab" onclick="sw('visitors',this)">Visitors</button>
-  <button class="brand-tab active-atm" onclick="sw('atm-pulse',this)">ABBA The Museum 2026</button>
+  <button class="brand-tab active-atm" onclick="sw('visitors',this)">Visitors</button>
+  <button class="brand-tab" onclick="sw('atm-pulse',this)">ABBA The Museum 2026</button>
   <button class="brand-tab" onclick="sw('ae-pulse',this)">Avicii Experience 2026</button>
 </div>
 <div id="view-atm" style="display:none">
@@ -292,7 +292,7 @@ tr.gap-row td.td-m{color:#c05a20;background:#fff5ee!important}
   <div class="section-wrap" id="tables-ae"></div>
 </div>
 
-<div id="view-visitors" style="display:none">
+<div id="view-visitors">
   <div class="vis-month-bar">
     <span class="vis-month-lbl">Period:</span>
     <button class="vis-month-btn vm-active" onclick="selVisitorMonth('jan',this)">January</button>
@@ -307,7 +307,7 @@ tr.gap-row td.td-m{color:#c05a20;background:#fff5ee!important}
 </div>
 <div id="view-ae-pulse" style="display:none"></div>
 <div id="view-ae-social" style="display:none"></div>
-<div id="view-atm-pulse"></div>
+<div id="view-atm-pulse" style="display:none"></div>
 <div id="view-atm-social" style="display:none"></div>
 <div class="legend">
   <div class="li"><div class="ld" style="background:#22c55e"></div>On Track ≥100% of YTD target</div>
@@ -3205,6 +3205,7 @@ function init(){
   buildTables('tables-atm','atm');
   buildTables('tables-ae','ae');
   buildATMPulse();
+  selVisitorMonth('ytd', document.querySelector('.vis-month-btn.vm-active'));
 }
 init();
 </script>
