@@ -1,0 +1,3212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPI Dashboard 2026 — ATM & AE</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f4efe6;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:12px}
+.top-bar{padding:20px 28px 12px;border-bottom:1px solid #ddd6c8;display:flex;align-items:baseline;gap:16px;position:sticky;top:0;background:#f4efe6;z-index:10}
+.top-bar h1{font-size:18px;font-weight:700;color:#111;letter-spacing:-0.02em}
+.top-meta{color:#7a7068;font-size:11px}
+.brand-tabs{display:flex;gap:0;padding:0 28px;border-bottom:1px solid #ddd6c8;position:sticky;top:57px;background:#f4efe6;z-index:10}
+.brand-tab{padding:10px 22px;border:none;border-bottom:2px solid transparent;background:transparent;color:#9a8f84;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.02em;margin-bottom:-1px;transition:color .15s}
+.brand-tab:hover{color:#555}
+.brand-tab.active-atm{color:#8c6a2f;border-bottom-color:#8c6a2f}
+.brand-tab.active-ae{color:#1d6fa4;border-bottom-color:#1d6fa4}
+.exec-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:#ddd6c8;border-bottom:1px solid #ddd6c8}
+.exec-card{background:#faf6ef;padding:18px 22px}
+.card-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9a8f84;margin-bottom:8px}
+.card-value{font-size:24px;font-weight:700;color:#111;letter-spacing:-0.03em;line-height:1}
+.card-sub{font-size:11px;color:#7a7068;margin-top:5px}
+.card-var{font-size:11px;font-weight:700;margin-top:3px}
+.vp{color:#2a7a3b}.vn{color:#b83232}.vw{color:#c27a10}
+.section-wrap{padding:0 28px 28px}
+.sec-head{display:flex;align-items:center;gap:10px;padding:20px 0 10px;border-top:2px solid #ddd6c8;margin-top:4px}
+.sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#7a7068}
+.bp{font-size:9px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:3px}
+.bp-atm{background:#fdf0d5;color:#8c6a2f;border:1px solid #c9a05a55}
+.bp-ae{background:#ddeef8;color:#1d6fa4;border:1px solid #1d6fa455}
+.tbl-wrap{overflow-x:auto;border:1px solid #ddd6c8;border-radius:4px}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#7a6e60;background:#ede8df;padding:7px 8px;text-align:right;white-space:nowrap;border-bottom:2px solid #ddd6c8;position:sticky;top:89px;z-index:4}
+th.th-m{text-align:left;width:240px;min-width:240px;position:sticky;left:0;z-index:5;background:#ede8df}
+th.th-mo{width:50px;min-width:44px}
+th.th-sep{border-left:2px solid #c8c0b4!important}
+th.th-ytd{width:68px;background:#e4ddd2!important}
+th.th-ytgt{width:68px;background:#e4ddd2!important}
+th.th-var{width:58px;background:#e4ddd2!important}
+th.th-ann{width:70px}
+th.th-bench{width:150px;text-align:left}
+th.th-st{width:86px}
+td{padding:10px 8px;text-align:right;border-bottom:1px solid #e4ddd2;white-space:nowrap;vertical-align:top;color:#9a8f84}
+td.td-m{text-align:left;color:#2a2a2a;font-weight:500;position:sticky;left:0;background:#faf6ef;z-index:3;padding-left:4px;border-right:2px solid #ddd6c8;white-space:normal;line-height:1.4}
+tr:nth-child(even) td{background:#f5f0e8}
+tr:nth-child(even) td.td-m{background:#f5f0e8}
+tr:hover td{background:#ede8df!important}
+tr:hover td.td-m{background:#ede8df!important}
+.cv-a{color:#111;font-weight:600}
+.cv-t{color:#bbb6aa}
+.mc-g{background:#eaf5ec!important}
+.mc-y{background:#fdf7e3!important}
+.mc-r{background:#fceaea!important}
+td.td-ytd{color:#2a2a2a;font-weight:700;background:#ede8df!important}
+td.td-ytgt{color:#7a7068;background:#ede8df!important}
+td.td-var{font-weight:700;font-size:11px;background:#ede8df!important}
+td.td-ann{color:#bbb6aa}
+td.td-bench{text-align:left!important;color:#7a7068;font-size:10px;font-style:italic;white-space:normal;line-height:1.4;max-width:150px}
+td.td-sep{border-left:2px solid #ddd6c8!important}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.p-g{background:#e8f5eb;color:#2a7a3b;border:1px solid #2a7a3b44}
+.p-y{background:#fdf7e0;color:#c27a10;border:1px solid #c27a1044}
+.p-r{background:#fceaea;color:#b83232;border:1px solid #b8323244}
+.p-e{background:#f0ece6;color:#9a8f84;border:1px solid #ddd6c8}
+.p-gap{background:#fff0e6;color:#c05a20;border:1px solid #c05a2044}
+tr.gap-row td{background:#fff5ee!important}
+tr.gap-row td.td-m{color:#c05a20;background:#fff5ee!important}
+.legend{display:flex;gap:18px;padding:12px 28px 16px;border-top:1px solid #ddd6c8;flex-wrap:wrap;background:#f4efe6}
+.li{display:flex;align-items:center;gap:5px;font-size:10px;color:#7a7068}
+.ld{width:6px;height:6px;border-radius:50%}
+.footer{color:#9a8f84;font-size:10px;padding:10px 28px 24px;background:#f4efe6}
+
+.layer-row{border-top:1px solid #ddd6c8}
+.layer-row td{background:#ede8df!important;padding:3px 8px;font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7a6e60;border-bottom:2px solid #ddd6c8!important;white-space:nowrap}
+.chart-toolbar{display:flex;align-items:center;gap:8px;padding:14px 28px;border-bottom:1px solid #ddd6c8;flex-wrap:wrap;background:#f4efe6;position:sticky;top:89px;z-index:3}
+.chart-metric-lbl{font-size:10px;font-weight:700;color:#7a6e60;text-transform:uppercase;letter-spacing:.07em;margin-right:6px}
+.chart-btn{padding:5px 14px;border:1px solid #ddd6c8;border-radius:3px;background:#faf6ef;color:#7a7068;font-size:11px;font-weight:600;cursor:pointer;transition:background .1s}
+.chart-btn.cb-active,.chart-btn:hover{background:#ede8df;color:#2a2a2a;border-color:#b8b0a4}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px 28px}
+.chart-panel{background:#faf6ef;border:1px solid #ddd6c8;border-radius:4px;padding:16px 20px 8px}
+.chart-panel canvas{width:100%;display:block}
+.chart-note{color:#9a8f84;font-size:10px;padding:0 28px 24px;font-style:italic}
+.brand-tab.active-tr{color:#555;border-bottom-color:#555}
+
+/* ── Visitors sub-tab ─────────────────────────────── */
+.vis-month-bar{display:flex;align-items:center;gap:0;padding:12px 28px;border-bottom:1px solid #ddd6c8;background:#faf6ef;position:sticky;top:89px;z-index:3;flex-wrap:wrap;row-gap:8px}
+.vis-month-lbl{font-size:10px;font-weight:700;color:#7a6e60;text-transform:uppercase;letter-spacing:.07em;margin-right:12px}
+.vis-month-btn{padding:5px 16px;border:1px solid #ddd6c8;background:#f4efe6;color:#7a7068;font-size:11px;font-weight:600;cursor:pointer;margin-right:4px;border-radius:3px;transition:all .1s}
+.vis-month-btn.vm-active{background:#2a2a2a;color:#fff;border-color:#2a2a2a}
+.vis-panels{display:grid;grid-template-columns:1fr 1fr;min-height:600px}
+.vis-panel{padding:22px 26px 36px;border-right:1px solid #ddd6c8}
+.vis-panel:last-child{border-right:0}
+.vis-brand-head{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:12px;border-bottom:2px solid #ddd6c8}
+.vis-brand-name{font-size:14px;font-weight:700;letter-spacing:-0.01em}
+.vis-section-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#9a8f84;margin:18px 0 10px;padding-bottom:5px;border-bottom:1px solid #e4ddd2}
+.vis-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px}
+.vis-stat{background:#fff;border:1px solid #ddd6c8;border-radius:4px;padding:12px 12px 10px}
+.vis-stat-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9a8f84;margin-bottom:5px}
+.vis-stat-val{font-size:19px;font-weight:700;color:#111;letter-spacing:-0.02em;line-height:1}
+.vis-stat-sub{font-size:9px;color:#7a7068;margin-top:4px;line-height:1.3}
+.vis-stat-yoy{font-size:10px;font-weight:700;margin-top:3px}
+.vis-chart-box{background:#faf6ef;border:1px solid #ddd6c8;border-radius:4px;padding:10px 8px 4px;margin-bottom:14px}
+.vis-occ-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px}
+.vis-occ-cell{background:#faf6ef;border:1px solid #ddd6c8;border-radius:3px;padding:8px 8px 6px;text-align:center}
+.vis-occ-mo{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9a8f84;margin-bottom:3px}
+.vis-occ-val{font-size:14px;font-weight:700;color:#111;line-height:1}
+.vis-occ-tgt{font-size:8px;color:#bbb6aa;margin-top:2px}
+.vis-occ-bar{height:4px;border-radius:2px;margin-top:5px;background:#e4ddd2;overflow:hidden}
+.vis-occ-fill{height:100%;border-radius:2px}
+.vis-geo-item{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vis-geo-name{font-size:10px;color:#2a2a2a;font-weight:500;width:72px;flex-shrink:0}
+.vis-geo-bar-wrap{flex:1;height:8px;background:#e4ddd2;border-radius:4px;overflow:hidden}
+.vis-geo-bar-fill{height:100%;border-radius:4px}
+.vis-geo-pct{font-size:10px;color:#7a7068;font-weight:600;width:30px;text-align:right;flex-shrink:0}
+.vis-country-row{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.vis-country-num{font-size:9px;color:#9a8f84;width:14px;text-align:right;flex-shrink:0}
+.vis-country-name{font-size:10px;color:#2a2a2a;font-weight:500;flex:1}
+.vis-country-bar-wrap{width:72px;height:5px;background:#e4ddd2;border-radius:3px;overflow:hidden;flex-shrink:0}
+.vis-country-bar-fill{height:100%;border-radius:3px}
+.vis-country-pct{font-size:10px;color:#7a7068;font-weight:600;width:26px;text-align:right;flex-shrink:0}
+.vis-flag-row{display:flex;gap:16px;margin-bottom:10px}
+.vis-flag-card{flex:1;background:#faf6ef;border:1px solid #ddd6c8;border-radius:4px;padding:10px 12px;text-align:center}
+.vis-flag-val{font-size:18px;font-weight:700;color:#111;line-height:1}
+.vis-flag-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9a8f84;margin-top:4px}
+.vis-peer-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.vis-peer-name{font-size:10px;color:#2a2a2a;width:80px;flex-shrink:0}
+.vis-peer-bar-wrap{flex:1;height:10px;background:#e4ddd2;border-radius:4px;overflow:hidden}
+.vis-peer-bar-fill{height:100%;border-radius:4px}
+.vis-peer-val{font-size:10px;font-weight:700;color:#2a2a2a;width:52px;text-align:right;flex-shrink:0}
+
+/* ── AE Pulse (Test) ────────────────────────────────────── */
+.pulse-wrap{padding:28px}
+.pulse-header{margin-bottom:22px;padding-bottom:14px;border-bottom:2px solid #ddd6c8;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pulse-title{font-size:16px;font-weight:700;color:#1d6fa4;letter-spacing:-0.01em}
+.pulse-sub{font-size:11px;color:#7a7068}
+.pulse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.pulse-card{background:#fff;border:1px solid #ddd6c8;border-radius:6px;padding:18px 20px 14px;position:relative;overflow:hidden}
+.pulse-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--pc,#ddd6c8)}
+.pulse-card-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#9a8f84;margin-bottom:8px}
+.pulse-card-val{font-size:28px;font-weight:700;color:#111;letter-spacing:-0.03em;line-height:1;margin-bottom:8px}
+.pulse-card-val.pc-na{font-size:16px;color:#7a7068;padding-top:6px}
+.pulse-card-meta{font-size:10px;color:#7a7068;line-height:1.5}
+.pulse-card-pill{position:absolute;top:14px;right:14px}
+.pulse-sep{border:none;border-top:1px solid #ddd6c8;margin:0 0 20px}
+.pulse-gaps-head{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#c05a20;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.pulse-gap-item{display:flex;align-items:flex-start;gap:12px;padding:8px 12px;background:#fff5ee;border:1px solid #f0d4c0;border-radius:4px;margin-bottom:6px}
+.pulse-gap-name{font-size:11px;color:#2a2a2a;font-weight:500;white-space:nowrap;min-width:160px;flex-shrink:0}
+.pulse-gap-bench{font-size:10px;color:#c05a20;font-style:italic;flex:1;line-height:1.4}
+
+
+.pulse-funnel-row{margin-bottom:14px}
+.pulse-stage-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#7a6e60;margin-bottom:6px;display:flex;align-items:center;gap:6px;padding-left:2px}
+.pulse-stage-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
+.pulse-cards-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ── Pulse sub-navigation ────────────────────────────── */
+.pulse-sub-nav{display:flex;gap:0;padding:0 28px;border-bottom:1px solid #ddd6c8;background:#faf6ef;position:sticky;top:89px;z-index:2;flex-wrap:wrap}
+.psn-btn{padding:8px 18px;border:none;border-bottom:2px solid transparent;background:transparent;color:#9a8f84;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.02em;margin-bottom:-1px;transition:color .12s;white-space:nowrap}
+.psn-btn:hover{color:#1d6fa4}
+.psn-btn.psn-active{color:#1d6fa4;border-bottom-color:#1d6fa4}
+
+/* ── Pulse sub-content wrap ──────────────────────────── */
+.pulse-sub-wrap{padding:22px 28px 36px}
+
+/* ── Breakdown list ──────────────────────────────────── */
+.psub-breakdown{border:1px solid #ddd6c8;border-radius:4px;overflow:hidden;margin-bottom:4px}
+.psub-header-row{display:flex;align-items:center;padding:6px 14px;background:#ede8df;border-bottom:2px solid #ddd6c8}
+.psub-header-row span{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7a6e60}
+.psub-col-name{flex:3}
+.psub-col-num{flex:1.2;text-align:right}
+.psub-col-sm{flex:0.9;text-align:right}
+.psub-col-st{flex:0 0 84px;text-align:right}
+.psub-row{border-bottom:1px solid #e4ddd2;padding:9px 14px}
+.psub-row:last-child{border-bottom:none}
+.psub-row:nth-child(even){background:#faf6ef}
+.psub-row-main{display:flex;align-items:baseline;gap:0}
+.psub-actual{font-size:11px;font-weight:700;color:#111}
+.psub-target{font-size:10px;color:#9a8f84}
+.psub-name{flex:3;font-size:11px;color:#2a2a2a;font-weight:500}
+.psub-await{color:#bbb6aa;font-weight:400;font-size:10px}
+.psub-bench{font-size:9px;color:#9a8f84;font-style:italic;margin-top:3px;line-height:1.4}
+.psub-divider{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#9a8f84;background:#f5f0e8;padding:5px 14px;border-bottom:1px solid #e4ddd2}
+.psub-no-data{padding:18px 20px;background:#faf6ef;border:1px solid #ddd6c8;border-radius:4px;text-align:center;color:#9a8f84;font-size:10px;font-style:italic;margin-bottom:14px}
+/* ── AE Social (Test) ───────────────────────────────────── */
+.social-wrap{padding:0 28px 36px}
+.social-header{padding:20px 0 14px;border-bottom:2px solid #ddd6c8;margin-bottom:4px;display:flex;align-items:center;gap:12px}
+.social-title{font-size:15px;font-weight:700;color:#1d6fa4;letter-spacing:-0.01em}
+.social-sub{font-size:11px;color:#7a7068}
+.social-overview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:4px}
+.social-trend-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:4px}
+.social-channels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:4px}
+.social-channel{background:#faf6ef;border:1px solid #ddd6c8;border-radius:5px;padding:16px 18px}
+.social-ch-head{font-size:11px;font-weight:700;color:#2a2a2a;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e4ddd2;letter-spacing:.01em}
+.social-kpi-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f0ece6}
+.social-kpi-row:last-of-type{border-bottom:none}
+.social-kpi-name{font-size:10px;color:#7a7068}
+.social-kpi-val{font-size:11px;font-weight:700;color:#111}
+.social-insight{font-size:9px;color:#7a7068;font-style:italic;margin-top:10px;line-height:1.5;padding:8px 10px;background:#f0ece6;border-radius:3px;border-left:2px solid #1d6fa455}
+/* ── Paid Media Channel Layout ──────────────────────────── */
+.paid-section-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7a6e60;margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid #ddd6c8}
+.paid-tracker-wrap{overflow-x:auto;margin-bottom:4px;border:1px solid #ddd6c8;border-radius:4px}
+.paid-tracker-table{width:100%;border-collapse:collapse;font-size:10px}
+.paid-tracker-table thead tr{background:#ede8df}
+.paid-tracker-table th{padding:7px 10px;text-align:left;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7a6e60;border-bottom:2px solid #ddd6c8;white-space:nowrap}
+.paid-tracker-table td{padding:7px 10px;border-bottom:1px solid #e4ddd2;vertical-align:middle}
+.paid-tracker-table tr:last-child td{border-bottom:none}
+.paid-tracker-table tr:nth-child(even) td{background:#faf6ef}
+.ptk-name{font-weight:500;color:#2a2a2a;min-width:180px}
+.ptk-thr{font-size:9px;white-space:nowrap}
+.ptk-thr.ptk-min{color:#ef4444}
+.ptk-thr.ptk-tgt{color:#15803d;font-weight:600}
+.ptk-thr.ptk-str{color:#1d6fa4}
+.ptk-num{font-weight:700;color:#111;text-align:right;white-space:nowrap}
+.ptk-st{text-align:right;white-space:nowrap}
+.paid-card{background:#faf6ef;border:1px solid #ddd6c8;border-radius:5px;padding:14px 16px}
+.paid-card-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7a6e60;margin-bottom:6px}
+.paid-card-val{font-size:20px;font-weight:700;color:#111;letter-spacing:-.02em;margin-bottom:6px}
+.paid-card-val.pc-na{font-size:13px;color:#bbb6aa;font-weight:400}
+.paid-card-thr{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.pthr-min{font-size:8px;padding:2px 5px;background:#fef2f2;color:#ef4444;border-radius:3px}
+.pthr-tgt{font-size:8px;padding:2px 5px;background:#f0fdf4;color:#15803d;border-radius:3px;font-weight:600}
+.pthr-str{font-size:8px;padding:2px 5px;background:#eff6ff;color:#1d6fa4;border-radius:3px}
+.paid-card-pill{margin-top:4px}
+/* ── Pulse Overview — report style ────────────────────── */
+.rpt-wrap{padding:4px 0 8px}
+.rpt-section{margin:0 0 0}
+.rpt-section+.rpt-section{border-top:1px solid #ece8e1;margin-top:24px;padding-top:24px}
+.rpt-section-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#c4b9a8;margin-bottom:18px}
+.rpt-pair{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.rpt-val{font-size:40px;font-weight:700;letter-spacing:-.04em;line-height:1;margin-bottom:5px}
+.rpt-val.rpt-na{font-size:18px;color:#bbb6aa;font-weight:400;letter-spacing:0}
+.rpt-name{font-size:10px;color:#7a7068;font-weight:500;margin-bottom:4px;letter-spacing:.01em}
+.rpt-ctx{font-size:9px;color:#9a8f84;margin-bottom:9px;line-height:1.5}
+.rpt-bar-wrap{height:3px;background:#ece8e1;border-radius:2px;overflow:hidden}
+.rpt-bar{height:3px;border-radius:2px;background:#1d6fa4}
+/* ── AE Paid KPI Focus Table ──────────────────────── */
+.kpif-wrap{margin-bottom:20px}
+.kpif-title{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:2px;letter-spacing:-.01em}
+.kpif-sub{font-size:10px;color:#7a7068;margin-bottom:14px}
+.kpif-tbl-wrap{border:1px solid #2a2a2a;border-radius:5px;overflow:hidden}
+.kpif-table{width:100%;border-collapse:collapse}
+.kpif-table thead tr{background:#1a1a1a}
+.kpif-table th{padding:14px 14px;text-align:left;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#e5e5e5!important;background:#1a1a1a!important;white-space:nowrap;position:static!important;top:auto}
+.kpif-num{text-align:right}
+.kpif-min-h{color:#fca5a5!important}
+.kpif-tgt-h{color:#fde68a!important}
+.kpif-str-h{color:#86efac!important}
+.kpif-table td{padding:14px 14px;font-size:11px;border-bottom:1px solid #e4ddd2;vertical-align:middle}
+.kpif-min-c{background:#fef2f2;color:#9f1239;text-align:right;font-size:10px}
+.kpif-tgt-c{background:#fefce8;color:#854d0e;text-align:right;font-size:10px;font-weight:600}
+.kpif-str-c{background:#f0fdf4;color:#166534;text-align:right;font-size:10px}
+.kpif-cur{text-align:right;font-weight:700;color:#111}
+.kpif-st{text-align:right}
+.kpif-footer td{font-size:8px;color:#9a8f84;font-style:italic;padding:8px 14px;background:#faf6ef;border-top:2px solid #ddd6c8!important;border-bottom:none!important}
+/* ── AE Paid Monthly Trend Table ──────────────────── */
+.kpif-mth-wrap{overflow-x:auto}
+.kpif-mth-tbl{min-width:700px}
+.kpif-mth-kpi-h{text-align:left!important;min-width:150px;position:static!important;top:auto}
+.kpif-mth-h{text-align:center!important;min-width:52px;position:static!important;top:auto}
+.kpif-mth-kpi{font-size:11px;font-weight:500;color:#2a2a2a;padding:10px 14px;border-bottom:1px solid #e4ddd2;white-space:nowrap}
+.kpif-mth-cell{text-align:center;padding:6px 4px;border:1px solid #e4ddd2;vertical-align:middle}
+.kpif-mth-act{font-weight:700;font-size:11px;color:#111;line-height:1.3}
+.kpif-mth-tgt{font-size:9px;color:#9a8f84;margin-top:2px;line-height:1.2}
+
+/* ── AE Pulse Overview v2 ────────────────────── */
+.ov-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+.ov-hdr-title{font-size:15px;font-weight:700;color:#1a1a1a;letter-spacing:-.01em}
+.ov-hdr-date{font-size:10px;color:#9a8f84}
+.ov-rule{border:none;border-top:1px solid #ddd6c8;margin:0 0 22px}
+.rpt-4col{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.rpt-sec-lbl2{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.13em;color:#9a8f84;background:#f5f0e8;padding:5px 8px;border-radius:3px;margin-bottom:16px;display:inline-block}
+.rpt-val-lg{font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1;margin-bottom:5px}
+.rpt-val-lg.rpt-na{font-size:18px;color:#c4b9a8;font-weight:400;letter-spacing:0}
+.rpt-val-ph{font-size:30px;font-weight:700;color:#ddd6c8;letter-spacing:-.03em;line-height:1;margin-bottom:5px}
+.rpt-met-name{font-size:9px;font-weight:600;color:#9a8f84;margin-bottom:6px;letter-spacing:.02em}
+.rpt-met-ctx{font-size:10px;color:#9a8f84;margin-top:7px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="top-bar"><h1>KPI Dashboard 2026</h1><div class="top-meta">ABBA The Museum &amp; Avicii Experience &nbsp;·&nbsp; Jan–Dec 2026 &nbsp;·&nbsp; Last updated: March 2026 &nbsp;·&nbsp; YTD: Jan–Mar</div></div>
+<div class="brand-tabs">
+  <button class="brand-tab" onclick="sw('visitors',this)">Visitors</button>
+  <button class="brand-tab active-atm" onclick="sw('atm-pulse',this)">ABBA The Museum 2026</button>
+  <button class="brand-tab" onclick="sw('ae-pulse',this)">Avicii Experience 2026</button>
+</div>
+<div id="view-atm" style="display:none">
+  <div class="exec-cards" id="cards-atm"></div>
+  <div class="section-wrap" id="tables-atm"></div>
+</div>
+<div id="view-ae" style="display:none">
+  <div class="exec-cards" id="cards-ae"></div>
+  <div class="section-wrap" id="tables-ae"></div>
+</div>
+
+<div id="view-visitors" style="display:none">
+  <div class="vis-month-bar">
+    <span class="vis-month-lbl">Period:</span>
+    <button class="vis-month-btn vm-active" onclick="selVisitorMonth('jan',this)">January</button>
+    <button class="vis-month-btn" onclick="selVisitorMonth('feb',this)">February</button>
+    <button class="vis-month-btn" onclick="selVisitorMonth('mar',this)">March</button>
+    <button class="vis-month-btn" onclick="selVisitorMonth('ytd',this)">YTD (Jan–Mar)</button>
+  </div>
+  <div class="vis-panels">
+    <div id="vis-panel-atm" class="vis-panel"></div>
+    <div id="vis-panel-ae" class="vis-panel"></div>
+  </div>
+</div>
+<div id="view-ae-pulse" style="display:none"></div>
+<div id="view-ae-social" style="display:none"></div>
+<div id="view-atm-pulse"></div>
+<div id="view-atm-social" style="display:none"></div>
+<div class="legend">
+  <div class="li"><div class="ld" style="background:#22c55e"></div>On Track ≥100% of YTD target</div>
+  <div class="li"><div class="ld" style="background:#eab308"></div>At Risk 90–99%</div>
+  <div class="li"><div class="ld" style="background:#ef4444"></div>Off Track &lt;90%</div>
+  <div class="li"><div class="ld" style="background:#333"></div>Not Tracked</div>
+  <div class="li"><div class="ld" style="background:#f97316"></div>Tracking Gap</div>
+</div>
+<div class="footer">Manual data entry · Source: dashboard/data/periods/ · Targets: dashboard/goals.json</div>
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// DATA — EDIT THIS SECTION MONTHLY
+// Months index: 0=Jan 1=Feb 2=Mar 3=Apr 4=May 5=Jun
+//               6=Jul 7=Aug 8=Sep 9=Oct 10=Nov 11=Dec
+// ═══════════════════════════════════════════════════════════════════
+const N=null;
+const DATA={
+atm:{
+  avgTicket:239,
+  fullYearTarget:434517,
+  sections:[
+  {id:'visit',title:'1 · Visitation & Revenue',brand:'atm',metrics:[
+    {label:'Visitors',fmt:'num',
+     actuals:[16844,19227,21483,N,N,N,N,N,N,N,N,N],
+     targets:[17383,19883,23000,31126,42068,49811,68178,64636,35778,34670,21150,29026],
+     bench:'YTD: 57,554 visitors (93.6% of YTD target 61,522) · Mar CM: 21,483 vs 23,000 (93.4%) · YoY: CM +4%, YTD -1% · Full-year target: 434,517'},
+    {label:'Ticket Revenue (SEK)',fmt:'sek',
+     actuals:[3669000,4188000,5143243,N,N,N,N,N,N,N,N,N],
+     targets:[3928558,4493558,5874755,7034476,9507368,11257286,15408228,14607736,8085828,7835420,4779900,6559876],
+     bench:'YTD: ~13.0M SEK (per visitor insight) · Mar CM: 5.14M SEK vs budget 5.87M (87.5%) · Jan–Feb derived from YTD total'},
+    {label:'Avg Ticket Price (SEK)',fmt:'num',
+     actuals:[N,N,239,N,N,N,N,N,N,N,N,N],
+     targets:[226,226,255,226,226,226,226,226,226,226,226,226],
+     bench:'Mar CM ATP: 239 SEK vs budget 255 SEK (93.7%) · YTD avg ATP: 226 SEK · Annual benchmark: 226 SEK'},
+    {label:'YoY Visitor Growth %',fmt:'pct',
+     actuals:[N,N,4.0,N,N,N,N,N,N,N,N,N],
+     targets:[5,5,5,5,5,5,5,5,5,5,5,5],
+     bench:'Mar CM: +4% YoY · YTD: -1% YoY · Target: +5% · Q2 paid media critical to recover YTD gap'},
+    {label:'Occupancy %',fmt:'pct',
+     actuals:[N,N,36,N,N,N,N,N,N,N,N,N],
+     targets:[32,40,36,51,61,71,91,90,57,62,40,55],
+     bench:'Mar actual: 36% ✓ On target (36%) · Peak: Jul–Aug 90–91% · Capacity management critical in peak'},
+    {label:'% Swedish Visitors',fmt:'pct',
+     actuals:[N,N,16,N,N,N,N,N,N,N,N,N],
+     targets:[15,15,15,15,15,15,15,15,15,15,15,15],
+     bench:'YTD: 16% Swedish (target 15%) ✓ Above target · International audience dominates (84%) — align content accordingly'},
+    {label:'% International Visitors',fmt:'pct',
+     actuals:[N,N,84,N,N,N,N,N,N,N,N,N],
+     targets:[85,85,85,85,85,85,85,85,85,85,85,85],
+     bench:'YTD: 84% international (target 85%) · Slightly below target · Key source markets: Nordics, UK, Germany, US'},
+    {label:'Website→Ticket CVR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5],
+     bench:'Target: 3–5% · Not yet tracked — requires GA4 funnel setup · High priority to measure post-paid launch'}
+  ],note:'Mar insight: YTD 57,554 visitors (-1% YoY) with 13.0M SEK ticket revenue. CM visitors +4% YoY — positive trend. 84% international visitors confirm global audience; content and paid targeting should prioritise key source markets. Occupancy at 36% — on target.'},
+  {id:'paid',title:'2 · Paid Media (Beet)',brand:'atm',metrics:[
+    {label:'Media Spend (SEK)',fmt:'sek',
+     actuals:[0,0,0,N,N,N,N,N,N,N,N,N],
+     targets:[0,0,0,15000,15000,15000,15000,15000,15000,15000,15000,15000],
+     bench:'Budget: 15,000 SEK/month · Q1: organic only · Paid media activates from Apr 2026'},
+    {label:'Blended ROAS',fmt:'dec1',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0],
+     bench:'Min: 15× · Target: 30× · Stretch: 60×+ · Based on 15K spend × ticket revenue'},
+    {label:'CPA — Cost per Ticket (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[14,14,14,14,14,14,14,14,14,14,14,14],
+     bench:'Min: ≤20 SEK · Target: ≤14 SEK · Stretch: ≤8 SEK · Budget ÷ ticket purchases'},
+    {label:'Ticket Purchases from Paid',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000],
+     bench:'Min: 1,000/mo · Target: 2,000/mo · Stretch: 3,200/mo (peak) · Beet delivery commitment'},
+    {label:'Google Search CTR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0],
+     bench:'Min: ≥25% · Target: ≥38% · Measures ad relevance + keyword match quality'},
+    {label:'Meta CTR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5],
+     bench:'Min: ≥1.0% · Target: ≥1.5% · Industry avg ~0.9% · Measures creative + audience quality'},
+    {label:'Revenue from Paid Ads (SEK)',fmt:'sek',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[450000,450000,450000,450000,450000,450000,450000,450000,450000,450000,450000,450000],
+     bench:'Target: 15K spend × 30× ROAS = 450K SEK/month · Actual = ticket purchases × avg ticket price'},
+    {label:'Google Search CPC (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5],
+     bench:'Min: ≤2.5 kr · Target: ≤1.5 kr · Stretch: ≤1.0 kr · Branded keywords. Spike signals competitor activity.'},
+    {label:'Meta CPM (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[45,45,45,45,45,45,45,45,45,45,45,45],
+     bench:'Min: ≤65 kr · Target: ≤45 kr · Stretch: ≤30 kr · Rises in Q4. Monitor closely.'},
+    {label:'Meta CPC (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[8,8,8,8,8,8,8,8,8,8,8,8],
+     bench:'Min: ≤12 kr · Target: ≤8 kr · Stretch: ≤5 kr · Above 12 kr = bid strategy or creative review.'},
+    {label:'TikTok CTR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21],
+     bench:'Min: ≥0.15% · Target: ≥0.21% · Stretch: ≥0.30% · Below 0.15% = creative review needed.'},
+    {label:'TikTok CPC (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[7,7,7,7,7,7,7,7,7,7,7,7],
+     bench:'Min: ≤10 kr · Target: ≤7 kr · Stretch: ≤5 kr · TAS range 6–9 kr.'}
+  ]},
+  {id:'ig',title:'3 · Instagram',brand:'atm',metrics:[
+    {label:'Total Followers',fmt:'num',
+     actuals:[N,61700,63800,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,80000],
+     bench:'2026 goal: 80,000 · Mar: +2,100 new followers (+87.5% vs prior period)'},
+    {label:'Follower Growth',fmt:'num',
+     actuals:[N,3690,2100,N,N,N,N,N,N,N,N,N],
+     targets:[1020,1020,1020,1200,1200,1020,1020,1020,1020,1020,1020,1020],
+     bench:'Creed target: 1,020+/mo · Mar: 2,100 (206% of target) · Strong organic pull'},
+    {label:'Reach',fmt:'num',
+     actuals:[N,255740,188600,N,N,N,N,N,N,N,N,N],
+     targets:[125000,125000,125000,125000,125000,125000,125000,125000,125000,125000,125000,125000],
+     bench:'Creed Service target: 125K/month · Mar: 188.6K (151% of target) ✓ Strong'},
+    {label:'Impressions',fmt:'num',
+     actuals:[N,339380,422900,N,N,N,N,N,N,N,N,N],
+     targets:[240000,240000,240000,240000,240000,240000,240000,240000,240000,240000,240000,240000],
+     bench:'Service: 30K/post × 8 posts · Mar: 422.9K (176% of target) ✓ Strong'},
+    {label:'MID FUNNEL',is_divider:true},
+    {label:'Profile Visits',fmt:'num',
+     actuals:[N,8300,6400,N,N,N,N,N,N,N,N,N],
+     targets:[8500,8500,8500,8500,8500,8500,8500,8500,8500,8500,8500,8500],
+     bench:'Target: 8,500+/month · Mar: 6,400 (75% of target) · High reach but lower click-through to profile'},
+    {label:'Link Clicks',fmt:'num',
+     actuals:[N,N,335,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 335 link clicks from 6,400 profile visits = 5.2% CTR (above 2–5% target)'},
+    {label:'Link CTR %',fmt:'pct',
+     actuals:[N,N,5.2,N,N,N,N,N,N,N,N,N],
+     targets:[2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0],
+     bench:'Target: 2–5% · Mar: 5.2% ✓ Above target — converting profile visits to site well'},
+    {label:'Engagement Rate % (by impressions)',fmt:'pct',
+     actuals:[N,9.87,8.09,N,N,N,N,N,N,N,N,N],
+     targets:[8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0],
+     bench:'Creed target: 8% · Mar: 8.09% (34.2K interactions / 422.9K impressions) ✓ At target'},
+    {label:'Content Interactions',fmt:'num',
+     actuals:[N,N,34200,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 34,200 total likes, comments, shares, saves'},
+    {label:'BOTTOM FUNNEL',is_divider:true},
+    {label:'Website Visits from IG',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[800,800,800,800,800,800,800,800,800,800,800,800],
+     bench:'⚠ Target: 800+/month · Creed owned · UTM links on all IG posts required'},
+    {label:'Social → Ticket CVR %',fmt:'pct',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0],
+     bench:'⚠ Target: 2–4% · Website visits from social who purchase a ticket · Requires GA4 goal'},
+    {label:'Ticket Purchases from Social',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Not tracked · Est potential: 800 visits × 3% CVR ≈ 24 tickets/mo · Priority action'}
+  ]},
+  {id:'tiktok',title:'4 · TikTok',brand:'atm',metrics:[
+    {label:'Views per Video',fmt:'num',
+     actuals:[N,N,33000,N,N,N,N,N,N,N,N,N],
+     targets:[30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000],
+     bench:'Mar: 33K views/video · Target: 30,000+/video'},
+    {label:'Total Monthly Views',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[100000,100000,100000,100000,100000,100000,100000,100000,100000,100000,100000,100000],
+     bench:'Target: 100,000+ total views/month · Sum all video views · Primary reach KPI for TikTok'},
+    {label:'Total Watch Time (hours)',fmt:'num',
+     actuals:[N,N,199,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 199 hours total · ~18.7 sec avg watch time per view'},
+    {label:'Avg Watch Time (sec)',fmt:'num',
+     actuals:[N,N,18.7,N,N,N,N,N,N,N,N,N],
+     targets:[15.0,15.0,15.0,15.0,15.0,15.0,15.0,15.0,15.0,15.0,15.0,15.0],
+     bench:'Mar: 18.7 sec · TikTok avg: 15–20 sec. Hook strength determines first-3-sec retention.'},
+    {label:'Completion Rate %',fmt:'pct',
+     actuals:[N,N,10.4,N,N,N,N,N,N,N,N,N],
+     targets:[10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0],
+     bench:'Mar: 10.4% · TikTok benchmark: 10–15%. Track — low completion signals weak hook or too-long content.'},
+    {label:'MID FUNNEL',is_divider:true},
+    {label:'Engagement Rate %',fmt:'pct',
+     actuals:[N,N,15.84,N,N,N,N,N,N,N,N,N],
+     targets:[10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0],
+     bench:'Mar: 15.84% ((likes+comments+shares+saves)/views) · Strong organic engagement'},
+    {label:'Likes',fmt:'num',
+     actuals:[N,N,4472,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 4,472 likes'},
+    {label:'Comments',fmt:'num',
+     actuals:[N,N,55,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 55 comments · Top themes: nostalgia, ABBA songs, Stockholm, Mamma Mia'},
+    {label:'Shares',fmt:'num',
+     actuals:[N,N,201,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 201 shares · Strong amplification signal'},
+    {label:'Saves',fmt:'num',
+     actuals:[N,N,498,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 498 saves · High save rate = intent/reference signal · 1.51% save rate'},
+    {label:'Save Rate %',fmt:'pct',
+     actuals:[N,N,1.51,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Save rate: saves/views × 100 · >1% = strong content relevance'},
+    {label:'New Followers per Video',fmt:'num',
+     actuals:[N,N,376,N,N,N,N,N,N,N,N,N],
+     targets:[400,400,400,400,400,400,400,400,400,400,400,400],
+     bench:'Mar: 376 new followers · 1.14% follower conversion rate from views'},
+    {label:'For You % (FYP traffic)',fmt:'pct',
+     actuals:[N,N,97.2,N,N,N,N,N,N,N,N,N],
+     targets:[90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0],
+     bench:'Mar: 97.2% FYP · Target >90% ✓ · Algorithm distributing content broadly'},
+    {label:'Search Traffic %',fmt:'pct',
+     actuals:[N,N,0.4,N,N,N,N,N,N,N,N,N],
+     targets:[5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0],
+     bench:'⚠ Mar: 0.4% vs target >5% · OFF TRACK · Add keyword-optimised captions + hashtags'},
+    {label:'Profile Traffic %',fmt:'pct',
+     actuals:[N,N,1.4,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 1.4% from profile · Signals loyal audience returning'},
+    {label:'BOTTOM FUNNEL',is_divider:true},
+    {label:'Website Visits from TikTok',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[300,300,300,300,300,300,300,300,300,300,300,300],
+     bench:'⚠ Target: 300+/month · Requires TikTok bio link + UTM · Not yet measured'},
+    {label:'TikTok → Ticket CVR %',fmt:'pct',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0],
+     bench:'⚠ Target: 2–4% · Add TikTok Shop or swipe-up link · 73% female ATM audience — test visual CTAs'}
+  ],note:'Mar insight: Strong FYP distribution (97.2%) and high engagement (15.8%) confirm algorithm approval. Search traffic critically low (0.4% vs >5% target) — add keyword captions. Top comment themes: nostalgia, ABBA songs, Stockholm, Mamma Mia — lean into these.'},
+  {id:'fb',title:'5 · Facebook',brand:'atm',metrics:[
+    {label:'Total Followers',fmt:'num',
+     actuals:[N,149000,149350,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: +350 new followers (-47.3% vs prior period) · Q1 cross-post only strategy'},
+    {label:'Follower Growth',fmt:'num',
+     actuals:[N,3000,350,N,N,N,N,N,N,N,N,N],
+     targets:[300,300,300,300,300,300,300,300,300,300,300,300],
+     bench:'Mar: sharp decline — expected on cross-post only. Organic FB content needed.'},
+    {label:'Reach',fmt:'num',
+     actuals:[N,143881,110300,N,N,N,N,N,N,N,N,N],
+     targets:[100000,100000,100000,100000,100000,100000,100000,100000,100000,100000,100000,100000],
+     bench:'Mar: 110.3K reach · Visitors from FB (4,700 visits Mar)'},
+    {label:'Impressions',fmt:'num',
+     actuals:[N,181577,202600,N,N,N,N,N,N,N,N,N],
+     targets:[440000,440000,440000,440000,440000,440000,440000,440000,440000,440000,440000,440000],
+     bench:'Service target: 440K/month · Mar: 202.6K (46% of target) · Off track — cross-post only'},
+    {label:'Link Clicks',fmt:'num',
+     actuals:[N,6581,469,N,N,N,N,N,N,N,N,N],
+     targets:[500,500,500,500,500,500,500,500,500,500,500,500],
+     bench:'Mar: 469 vs target 500 (93.8%) · Feb spike 6,581 driven by native photo post — replicate format'},
+    {label:'Page Visits',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000],
+     bench:'Target: 4,000+/month · Track via FB Insights · Page visits indicate active brand discovery'},
+    {label:'Content Interactions',fmt:'num',
+     actuals:[N,N,6500,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 6,500 interactions · Benchmark: 5,000+/month'},
+    {label:'Engagement Rate %',fmt:'pct',
+     actuals:[N,4.38,3.21,N,N,N,N,N,N,N,N,N],
+     targets:[4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0],
+     bench:'Target: 4% · Mar: 3.21% (6.5K/202.6K impressions) · At risk — native FB content would lift this'}
+  ]},
+  {id:'crm',title:'6 · Newsletter & CRM',brand:'atm',metrics:[
+    {label:'Total Subscribers',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,75000],
+     bench:'Year-end target: 75,000'},
+    {label:'List Growth',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[500,500,500,500,500,500,500,500,500,500,500,500],
+     bench:'Target: 500 new subscribers/month'},
+    {label:'Sends',fmt:'num',
+     actuals:[N,N,49620,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 49,620 sends'},
+    {label:'Delivered',fmt:'num',
+     actuals:[N,N,49104,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 49,104 delivered · 98.96% delivery rate ✓'},
+    {label:'Opens',fmt:'num',
+     actuals:[N,N,14861,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 14,861 opens'},
+    {label:'Open Rate %',fmt:'pct',
+     actuals:[N,N,30.26,N,N,N,N,N,N,N,N,N],
+     targets:[33.0,33.0,33.0,33.0,33.0,33.0,33.0,33.0,33.0,33.0,33.0,33.0],
+     bench:'Mar: 30.26% · Target floor: 33% · Benchmark range: 40–55% · AT RISK'},
+    {label:'Clicks',fmt:'num',
+     actuals:[N,N,873,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 873 clicks from 14,861 opens'},
+    {label:'CTR %',fmt:'pct',
+     actuals:[N,N,1.78,N,N,N,N,N,N,N,N,N],
+     targets:[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0],
+     bench:'Mar: 1.78% vs target 3% · OFF TRACK · Improve CTA clarity and link relevance'},
+    {label:'CTOR %',fmt:'pct',
+     actuals:[N,N,5.87,N,N,N,N,N,N,N,N,N],
+     targets:[5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0],
+     bench:'Mar: 5.87% vs target 5% ✓ ON TRACK · Those who open do click — open rate is the bottleneck'},
+    {label:'Website Visits from Email',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Track via UTM parameters — not yet set up'},
+    {label:'Conversions from Email',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Not tracked — cannot measure revenue impact. Priority action.'},
+    {label:'Revenue from Email (SEK)',fmt:'sek',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Not tracked — requires e-commerce attribution setup'},
+    {label:'Unsubscribe Rate %',fmt:'pct',lower_is_better:true,
+     actuals:[N,N,0.35,N,N,N,N,N,N,N,N,N],
+     targets:[0.32,0.32,0.32,0.32,0.32,0.32,0.32,0.32,0.32,0.32,0.32,0.32],
+     bench:'Mar: 0.35% · Target: <0.32% · AT RISK — slightly elevated vs healthy <0.3%'},
+    {label:'Spam Rate %',fmt:'pct',lower_is_better:true,
+     actuals:[N,N,0.03,N,N,N,N,N,N,N,N,N],
+     targets:[0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05],
+     bench:'Mar: 0.03% vs target <0.05% ✓ Healthy · 16 spam reports'}
+  ],note:'Mar insight: Strong delivery (98.96%) and engaged openers (CTOR 5.87% ✓) but low open rate (30.3%) and weak CTR (1.78%) limits downstream conversion. Conversion tracking missing — revenue impact unknown.'},
+  {id:'ooh',title:'7 · OOH / DOOH',brand:'atm',metrics:[
+    {label:'Active Campaigns',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Track campaign periods'},
+    {label:'Total Placements',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Record placements per campaign'},
+    {label:'Total Reach',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Target (active periods): 10M+ · Benchmark: 23.2M'},
+    {label:'Potential Contacts',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Benchmark: 62M+'},
+    {label:'Share of Voice %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Target: >8% · Benchmark: 9.37%'},
+    {label:'CPM (SEK)',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Benchmark: ~140 SEK'},
+    {label:'Spend (SEK)',fmt:'sek',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Record per campaign'},
+    {label:'Visitation Uplift %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Measure via promo code or index comparison'}
+  ]},
+  {id:'events',title:'8 · Events & PR',brand:'atm',metrics:[
+    {label:'Events Count',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[2,2,2,2,2,2,2,2,2,2,2,2],
+     bench:'Target: ~2 events/month'},
+    {label:'Event Cost (SEK)',fmt:'sek',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Holiday Dinner benchmark: 150,000 SEK'},
+    {label:'Attendees',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Holiday Dinner: 18 attendees'},
+    {label:'Earned Reach',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Holiday Dinner: 1.07M reach'},
+    {label:'Event CPM (SEK)',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Holiday Dinner: ~140 SEK'},
+    {label:'Content Pieces',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Track articles, posts, mentions'},
+    {label:'Website Visits from Events',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Track via UTM / referral traffic'},
+    {label:'Conversions from Events',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Attribution not fully tracked'}
+  ]},
+  {id:'search',title:'9 · Search & Website Funnel',brand:'atm',metrics:[
+    {label:'Total Sessions',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Track in Google Analytics'},
+    {label:'Ticket Page Visits',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Key conversion entry point'},
+    {label:'Web→Ticket CVR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5],
+     bench:'Benchmark: 3–5%'},
+    {label:'Search Clicks (GSC)',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Google Search Console'},
+    {label:'Search Conversions',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Organic search to ticket purchase'}
+  ]},
+  {id:'shop',title:'10 · Shop Performance',brand:'atm',metrics:[
+    {label:'Shop Sales (SEK)',fmt:'sek',
+     actuals:[N,N,1250732,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,1339750,N,N,N,N,N,N,N,N,N],
+     bench:'Mar actual: 1.25M vs budget 1.34M (93.4%) · Broadly in line with visitor volume'},
+    {label:'Shop CVR %',fmt:'pct',
+     actuals:[N,N,24.5,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,23.3,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 24.5% vs budget 23.3% ✓ ON TRACK · Conversion strength vs visitor count'},
+    {label:'Shop AOV (SEK)',fmt:'num',
+     actuals:[N,N,238,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,250,N,N,N,N,N,N,N,N,N],
+     bench:'Mar avg order 238 SEK vs budget 250 SEK (95.2%) · AT RISK — upsell opportunity'},
+    {label:'Shop Sales per Head (SEK)',fmt:'num',
+     actuals:[N,N,58,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,58,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 58 SEK/visitor = exactly on budget ✓ · Strong given lower ticket spend per head'}
+  ],note:'Mar insight: Shop CVR 24.5% beats budget — staff and display performing well. Lower revenue vs budget is proportional to visitor shortfall, not a shop execution issue. AOV below budget (238 vs 250 SEK) — upsell potential.'}
+  ]
+},
+
+ae:{
+  avgTicket:216,
+  fullYearTarget:68308,
+  sections:[
+  {id:'visit',title:'1 · Visitation & Revenue',brand:'ae',metrics:[
+    {label:'Visitors',fmt:'num',
+     actuals:[3087,3366,3194,N,N,N,N,N,N,N,N,N],
+     targets:[4041,5234,4515,5590,5597,5326,8392,8939,4823,5681,4548,5622],
+     bench:'YTD: 9,647 visitors vs target 13,790 (70.0%) · Mar: 3,194 vs 4,515 (70.7%) · YoY -21% · 2026 full-year target: 68,308'},
+    {label:'Ticket Revenue (SEK)',fmt:'sek',
+     actuals:[N,N,700000,N,N,N,N,N,N,N,N,N],
+     targets:[820323,1062502,916545,1134770,1136191,1081178,1703576,1814617,979069,1153243,922944,1141266],
+     bench:'Mar actual: 0.7M SEK (from visitor insight) · YTD: ~2.0M SEK · Full-year target ~13.9M SEK'},
+    {label:'Avg Ticket Price (SEK)',fmt:'num',
+     actuals:[N,N,216,N,N,N,N,N,N,N,N,N],
+     targets:[203,203,203,203,203,203,203,203,203,203,203,203],
+     bench:'Mar CM ATP: 216 SEK · YTD avg ATP: 200 SEK · Annual benchmark: 203 SEK'},
+    {label:'YoY Growth %',fmt:'pct',
+     actuals:[N,N,-21.0,N,N,N,N,N,N,N,N,N],
+     targets:[12,12,12,12,12,12,12,12,12,12,12,12],
+     bench:'Mar CM: -21% · YTD: -21% vs 2025 base · Target +12% · Paid media from Apr critical to close gap'},
+    {label:'Occupancy %',fmt:'pct',
+     actuals:[N,N,13,N,N,N,N,N,N,N,N,N],
+     targets:[12,13,13,21,20,20,30,32,18,20,17,20],
+     bench:'Mar actual: 13% ✓ On target (13%) · Peak: Jul–Aug 30–32% · Low occupancy = growth headroom'},
+    {label:'% Swedish Visitors',fmt:'pct',
+     actuals:[N,N,17,N,N,N,N,N,N,N,N,N],
+     targets:[20,20,20,20,20,20,20,20,20,20,20,20],
+     bench:'YTD: 17% Swedish (target 20%) · Below target — international audience dominates · Opportunity: local campaigns'},
+    {label:'% International Visitors',fmt:'pct',
+     actuals:[N,N,83,N,N,N,N,N,N,N,N,N],
+     targets:[80,80,80,80,80,80,80,80,80,80,80,80],
+     bench:'YTD: 83% international (target 80%) · Above target ✓ · Key source markets: UK, Germany, US'},
+    {label:'Website→Ticket CVR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5],
+     bench:'Target: 3–5% · Not yet tracked — requires GA4 funnel setup · Critical conversion gap'}
+  ],note:'Mar insight: YTD 9,647 visitors (-21% YoY). ATP 216 SEK above benchmark. Ticket revenue 2.0M SEK YTD. 83% international audience — content and targeting should reflect international visitor profile. Paid media from Apr essential to reverse visitor decline.'},
+  {id:'ig',title:'2 · Instagram & Funnel',brand:'ae',metrics:[
+    {label:'Total Followers',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,30000],
+     bench:'Year-end target: 30,000 · Track monthly total from IG insights'},
+    {label:'Follower Growth',fmt:'num',
+     actuals:[N,N,2100,N,N,N,N,N,N,N,N,N],
+     targets:[1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000],
+     bench:'Mar: +2,100 new followers · Strong organic growth signal'},
+    {label:'Reach',fmt:'num',
+     actuals:[N,N,188600,N,N,N,N,N,N,N,N,N],
+     targets:[125000,125000,125000,125000,125000,125000,125000,125000,125000,125000,125000,125000],
+     bench:'Mar: 188.6K reach ✓ Strong organic distribution'},
+    {label:'Impressions',fmt:'num',
+     actuals:[N,N,422900,N,N,N,N,N,N,N,N,N],
+     targets:[240000,240000,240000,240000,240000,240000,240000,240000,240000,240000,240000,240000],
+     bench:'Mar: 422.9K impressions ✓ Content reaching broadly'},
+    {label:'Engagement (interactions)',fmt:'num',
+     actuals:[N,N,34200,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 34,200 total interactions ✓ High audience interest'},
+    {label:'MID FUNNEL',is_divider:true},
+    {label:'Profile Visits',fmt:'num',
+     actuals:[N,6485,6400,N,N,N,N,N,N,N,N,N],
+     targets:[7000,7000,7000,7000,7000,7000,7000,7000,7000,7000,7000,7000],
+     bench:'Mar: 6,400 profile visits · Consistent with Feb baseline'},
+    {label:'Link Clicks',fmt:'num',
+     actuals:[0,0,335,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,500,500,500,500,500,500,500,500,500,500],
+     bench:'Mar: 335 vs target 500 (67%) · Target active from Mar (bio link fixed) · Jan–Feb 0 (link broken)'},
+    {label:'Link CTR %',fmt:'pct',
+     actuals:[0,0,5.2,N,N,N,N,N,N,N,N,N],
+     targets:[2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0],
+     bench:'Mar: 5.2% CTR (335/6,400) ✓ Above 2–5% target · Bio link now active'},
+    {label:'Engagement Rate %',fmt:'pct',
+     actuals:[N,N,8.09,N,N,N,N,N,N,N,N,N],
+     targets:[8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0],
+     bench:'Mar: 8.09% (34.2K/422.9K) ✓ At target'},
+    {label:'BOTTOM FUNNEL',is_divider:true},
+    {label:'Website Visits from IG',fmt:'num',is_gap:true,
+     actuals:[N,N,335,N,N,N,N,N,N,N,N,N],
+     targets:[500,500,500,500,500,500,500,500,500,500,500,500],
+     bench:'Mar: 335 clicks (bio link active) · Target: 500+/month · Track via UTM parameters'},
+    {label:'Social → Ticket CVR %',fmt:'pct',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0],
+     bench:'⚠ Target: 2–4% · 335 clicks but unknown conversion · Critical gap — set up GA4 goal now'},
+    {label:'Ticket Purchases from Social',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Soft benchmark: 335 website visits × 3% CVR ≈ 10 tickets/mo · Set up GA4 + UTM to measure actual purchases from social'}
+  ],note:'Mar insight: Reach and engagement are strong — content is working. Bio link now active (335 clicks, 5.2% CTR). Conversion bottleneck is funnel steps after click: landing page, ticket page, checkout. Paid media would amplify this existing organic strength.'},
+  {id:'tiktok',title:'3 · TikTok',brand:'ae',metrics:[
+    {label:'Views per Video',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000],
+     bench:'Target: 30,000+/video · Mar best: 4.5M viral video · Track per-post for consistency vs spikes'},
+    {label:'Total Views',fmt:'num',
+     actuals:[N,N,84100,N,N,N,N,N,N,N,N,N],
+     targets:[100000,100000,100000,100000,100000,100000,100000,100000,100000,100000,100000,100000],
+     bench:'Mar: 84.1K total · Best video: 4.5M · Median: ~50K · One viral video skews total'},
+    {label:'Profile Views',fmt:'num',
+     actuals:[N,N,2200,N,N,N,N,N,N,N,N,N],
+     targets:[2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000],
+     bench:'Mar: 2,200 ✓ Above target (2,000) · Profile views signal audience interest in brand beyond single video'},
+    {label:'Likes',fmt:'num',
+     actuals:[N,N,10000,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 10,000 likes · Strong positive signal'},
+    {label:'Comments',fmt:'num',
+     actuals:[N,N,145,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 145 comments'},
+    {label:'Shares',fmt:'num',
+     actuals:[N,N,343,N,N,N,N,N,N,N,N,N],
+     targets:[300,300,300,300,300,300,300,300,300,300,300,300],
+     bench:'Mar: 343 ✓ Above target (300) · Shares = organic amplification — key discovery driver'},
+    {label:'MID FUNNEL',is_divider:true},
+    {label:'Engagement Rate %',fmt:'pct',
+     actuals:[N,N,12.47,N,N,N,N,N,N,N,N,N],
+     targets:[10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0],
+     bench:'Mar: 12.47% ((10K+145+343)/84.1K) · Strong · ATM Mar benchmark: 15.84%'},
+    {label:'Followers Gained',fmt:'num',
+     actuals:[N,N,445,N,N,N,N,N,N,N,N,N],
+     targets:[400,400,400,400,400,400,400,400,400,400,400,400],
+     bench:'Mar: +445 new followers · 0.53% follower conversion rate'},
+    {label:'New Viewers',fmt:'num',
+     actuals:[N,N,25000,N,N,N,N,N,N,N,N,N],
+     targets:[20000,20000,20000,20000,20000,20000,20000,20000,20000,20000,20000,20000],
+     bench:'Mar: 25,000 ✓ Above target (20,000) · 1,570 returning viewers · New viewers = top of discovery funnel'},
+    {label:'Female Audience %',fmt:'pct',
+     actuals:[N,N,73,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 73% female, 27% male · Benchmark: 65–75% female typical for museum/cultural content · Use for content + paid audience targeting'},
+    {label:'For You % (FYP traffic)',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0],
+     bench:'Target >90% FYP · Track distribution source going forward'},
+    {label:'Search Traffic %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0],
+     bench:'Target >5% · ATM Mar: 0.4% · Add keyword captions for Avicii-related searches'},
+    {label:'BOTTOM FUNNEL',is_divider:true},
+    {label:'Website Visits from TikTok',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[200,200,200,200,200,200,200,200,200,200,200,200],
+     bench:'⚠ Target: 200+/month · Add TikTok bio link + UTM · No funnel tracking yet — critical gap'},
+    {label:'TikTok → Ticket CVR %',fmt:'pct',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0],
+     bench:'⚠ Target: 2–4% · 73% female audience — test visual CTAs and landing page relevance'}
+  ],note:'Mar insight: One viral video (4.5M views) drove strong discovery. 73% female audience. Strong reach and growth, but conversion from TikTok to ticket is unknown — no funnel tracking from TikTok to website yet.'},
+  {id:'fb',title:'4 · Facebook',brand:'ae',metrics:[
+    {label:'Follower Growth',fmt:'num',
+     actuals:[N,N,230,N,N,N,N,N,N,N,N,N],
+     targets:[200,200,200,200,200,200,200,200,200,200,200,200],
+     bench:'Mar: +230 new followers'},
+    {label:'Reach',fmt:'num',
+     actuals:[N,N,100000,N,N,N,N,N,N,N,N,N],
+     targets:[100000,100000,100000,100000,100000,100000,100000,100000,100000,100000,100000,100000],
+     bench:'Mar: ~100K reach'},
+    {label:'Page Visits',fmt:'num',
+     actuals:[N,N,1500,N,N,N,N,N,N,N,N,N],
+     targets:[2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000],
+     bench:'Mar: 1,500 vs target 2,000 (75%) · Improve with native FB content + event posts'},
+    {label:'Link Clicks',fmt:'num',
+     actuals:[N,N,260,N,N,N,N,N,N,N,N,N],
+     targets:[300,300,300,300,300,300,300,300,300,300,300,300],
+     bench:'Mar: 260 vs target 300 (87%) · FB link traffic lower than ATM — cross-post only reduces CTA visibility'},
+    {label:'Content Interactions',fmt:'num',
+     actuals:[N,N,3300,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: ~3,300 · Benchmark: 3,000+/month · No hard target — cross-post channel'},
+    {label:'Engagement Rate %',fmt:'pct',
+     actuals:[N,N,3.3,N,N,N,N,N,N,N,N,N],
+     targets:[4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0],
+     bench:'Mar: ~3.3% · Mid-range · Cross-post only strategy limits performance'}
+  ],note:'Mar insight: FB reach present (~100K) but traffic and conversion weak (260 clicks, 1,500 visits). Primarily a cross-post channel for AE. Native FB content would improve follower growth and engagement.'},
+  {id:'paid',title:'5 · Paid Media (Beet)',brand:'ae',metrics:[
+    {label:'Media Spend (SEK)',fmt:'sek',
+     actuals:[0,0,0,N,N,N,N,N,N,N,N,N],
+     targets:[0,0,0,15000,15000,15000,15000,15000,15000,15000,15000,15000],
+     bench:'Budget: 15,000 SEK/month · Q1: organic only · Paid media activates from Apr 2026'},
+    {label:'Blended ROAS',fmt:'dec1',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0],
+     bench:'Min: 8× · Target: 12× · Stretch: 20×+ · Lower than ATM — smaller visitor base, higher CPA'},
+    {label:'CPA — Cost per Ticket (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,7,N,N,N,N,N,N,N,N,N],
+     targets:[35,35,35,35,35,35,35,35,35,35,35,35],
+     bench:'Min: ≤50 SEK · Target: ≤35 SEK · Stretch: ≤20 SEK · Higher than ATM — smaller target audience'},
+    {label:'Ticket Purchases from Paid',fmt:'num',
+     actuals:[N,N,6,N,N,N,N,N,N,N,N,N],
+     targets:[480,480,480,480,480,480,480,480,480,480,480,480],
+     bench:'Min: 350/mo · Target: 480/mo · Stretch: 600/mo · Beet delivery commitment · Mar: 6 conversions (26–27 Mar, partial month)'},
+    {label:'TikTok CPM (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[18,18,18,18,18,18,18,18,18,18,18,18],
+     bench:'Min: ≤22 SEK · Target: ≤18 SEK · AE audience skews younger — TikTok primary paid channel'},
+    {label:'Meta CTR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3],
+     bench:'Min: ≥0.9% · Target: ≥1.3% · Reflects smaller but more targeted AE audience'},
+    {label:'Revenue from Paid Ads (SEK)',fmt:'sek',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[180000,180000,180000,180000,180000,180000,180000,180000,180000,180000,180000,180000],
+     bench:'Target: 15K spend × 12× ROAS = 180K SEK/month · Actual = ticket purchases × 203 SEK avg ticket'},
+    {label:'Google Search CTR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[30,30,30,30,30,30,30,30,30,30,30,30],
+     bench:'Min: ≥22% · Target: ≥30% · Stretch: ≥38% · Branded avicii experience. TAS delivered 32%.'},
+    {label:'Google Search CPC (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5],
+     bench:'Min: ≤4 kr · Target: ≤2.5 kr · Stretch: ≤2.0 kr · Higher competition than ATM. Monitor weekly.'},
+    {label:'Meta CPM (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[22,22,22,22,22,22,22,22,22,22,22,22],
+     bench:'Min: ≤30 kr · Target: ≤22 kr · Stretch: ≤15 kr · AE audience smaller — CPM lower than ATM.'},
+    {label:'TikTok CTR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21],
+     bench:'Min: ≥0.15% · Target: ≥0.21% · Stretch: ≥0.30% · TAS delivered 0.17–0.23%. Below 0.15% = creative review.'},
+    {label:'TikTok CPC (SEK)',fmt:'num',lower_is_better:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[7,7,7,7,7,7,7,7,7,7,7,7],
+     bench:'Min: ≤10 kr · Target: ≤7 kr · Stretch: ≤5 kr · TAS range 6.25–8.93 kr.'},
+    {label:'Impressions (Paid)',fmt:'num',
+     actuals:[N,N,10603,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Mar: 10,603 impressions · Meta only (Instagram + Facebook) · AE Paid Asset V2 + Storytelling campaigns · Paid activated late Mar'}
+  ]},
+  {id:'crm',title:'6 · Newsletter & CRM',brand:'ae',metrics:[
+    {label:'Total Subscribers',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Build list — set year-end target'},
+    {label:'List Growth',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[200,200,200,200,200,200,200,200,200,200,200,200],
+     bench:'Target: 200 new/month (growth phase)'},
+    {label:'Sends',fmt:'num',
+     actuals:[N,N,N,42734,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Apr: 42,734 sends — first AE newsletter send'},
+    {label:'Delivered',fmt:'num',
+     actuals:[N,N,N,42277,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Apr: 42,277 delivered · 98.9% delivery rate'},
+    {label:'Open Rate %',fmt:'pct',
+     actuals:[N,N,N,38.72,N,N,N,N,N,N,N,N],
+     targets:[45.0,45.0,45.0,45.0,45.0,45.0,45.0,45.0,45.0,45.0,45.0,45.0],
+     bench:'Apr: 38.72% · Target 45% · Strong for welcome mail — above industry avg · Not representative of campaign mail CTR'},
+    {label:'Click Rate %',fmt:'pct',
+     actuals:[N,N,N,0.29,N,N,N,N,N,N,N,N],
+     targets:[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0],
+     bench:'Apr: 0.29% · Target 3% · Low but expected for welcome mail — no direct purchase CTA · Use as benchmark only'},
+    {label:'CTOR %',fmt:'pct',
+     actuals:[N,N,N,0.74,N,N,N,N,N,N,N,N],
+     targets:[5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0],
+     bench:'Apr: 0.74% CTOR · Target 5% · Welcome mail benchmark — low CTOR expected on first send'},
+    {label:'Conversions from Email',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Not tracked — priority to set up'},
+    {label:'Unsubscribe Rate %',fmt:'pct',lower_is_better:true,
+     actuals:[N,N,N,1.28,N,N,N,N,N,N,N,N],
+     targets:[0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3],
+     bench:'Apr: 1.28% — OFF TRACK vs target <0.3% · Welcome mail unsubscribe higher than normal · Clean list and improve segmentation'},
+    {label:'Hard Bounces %',fmt:'pct',lower_is_better:true,
+     actuals:[N,N,N,0.79,N,N,N,N,N,N,N,N],
+     targets:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],
+     bench:'Apr: 0.79% hard bounces (337 addresses) · Target <0.5% · List quality issue — clean hard bounces immediately'},
+    {label:'Spam Rate %',fmt:'pct',lower_is_better:true,
+     actuals:[N,N,N,0.02,N,N,N,N,N,N,N,N],
+     targets:[0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05],
+     bench:'Apr: 0.02% · Target <0.05% - Healthy · 9 spam reports'}
+  ],note:'First AE newsletter sent April 2026: \'A hello from Avicii Experience\' — 42,734 sends, 98.9% delivery rate. Data from index 3 (April). Targets set for ongoing campaigns — welcome mail metrics not directly comparable to campaign benchmarks.'},
+  {id:'ooh',title:'7 · OOH / DOOH',brand:'ae',metrics:[
+    {label:'Active Campaigns',fmt:'num',
+     actuals:[0,0,0,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Q1: no OOH activity'},
+    {label:'Total Reach',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Target (active periods): 5M+'},
+    {label:'Share of Voice %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Target: >8%'},
+    {label:'Spend (SEK)',fmt:'sek',
+     actuals:[0,0,0,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Q1: 0 SEK spend'}
+  ]},
+  {id:'events',title:'8 · Events & PR',brand:'ae',metrics:[
+    {label:'Events Count',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Track all brand events'},
+    {label:'Earned Reach',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Media coverage + social amplification'},
+    {label:'Event CPM (SEK)',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Calculate as: cost / (reach/1000)'},
+    {label:'Content Pieces',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Articles, posts, features'},
+    {label:'Website Visits from Events',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Track via UTM / referral'}
+  ]},
+  {id:'search',title:'9 · Search & Website Funnel',brand:'ae',metrics:[
+    {label:'Total Sessions',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Google Analytics'},
+    {label:'Ticket Page Visits',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Critical conversion step'},
+    {label:'Web→Ticket CVR %',fmt:'pct',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5],
+     bench:'Benchmark: 3–5%'},
+    {label:'Search Clicks (GSC)',fmt:'num',
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'Google Search Console'}
+  ]},
+  {id:'gaps',title:'10 · Tracking Gaps — Action Required',brand:'ae',metrics:[
+    {label:'IG Bio Link',fmt:'num',
+     actuals:[0,0,335,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,500,500,500,500,500,500,500,500,500,500],
+     bench:'✓ FIXED Mar 2026 — 335 clicks recorded. Jan–Feb: 0 (link was broken). Track monthly to confirm sustained performance.'},
+    {label:'Newsletter Conversions',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Not tracked — need UTM tagging + conversion goal setup'},
+    {label:'Web→Ticket Funnel',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Incomplete funnel tracking — verify GA4 goals and funnels'},
+    {label:'Events Attribution',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Event → website → ticket path not measured'},
+    {label:'Social→Ticket Attribution',fmt:'num',is_gap:true,
+     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     targets:[N,N,N,N,N,N,N,N,N,N,N,N],
+     bench:'⚠ Organic social to ticket purchase attribution missing'}
+  ]}
+  ]
+}
+};
+
+
+// ═══════════════════════════════════════════════════════════════════
+// VISITOR INSIGHT DATA — one entry per month (cm = current month, ytd = year-to-date)
+// ═══════════════════════════════════════════════════════════════════
+const VI={
+  atm:{
+    targets:{occupancy:[32,40,36,51,61,71,91,90,57,62,40,55]},
+    months:{
+      jan:{
+        visitors_cm:16844,visitors_ytd:16844,
+        yoy_cm:-3,yoy_ytd:-3,
+        ticket_cm:3800000,ticket_ytd:3800000,
+        atp_cm:226,atp_ytd:226,
+        occupancy:32,
+        swedish_ytd:13,intl_ytd:87,
+        countries:89,
+        region_cm:[{n:'Europe',p:45},{n:'Nordics',p:7},{n:'UK',p:12},{n:'Sweden',p:13},{n:'USA',p:8},{n:'RoW',p:15}],
+        region_ytd:[{n:'Europe',p:45},{n:'Nordics',p:7},{n:'UK',p:12},{n:'Sweden',p:13},{n:'USA',p:8},{n:'RoW',p:15}],
+        top10_cm:[{c:'Sweden',p:13},{c:'United Kingdom',p:12},{c:'Germany',p:9},{c:'USA',p:8},{c:'France',p:8},{c:'Australia',p:6},{c:'Netherlands',p:3},{c:'Italy',p:3},{c:'Finland',p:3},{c:'Spain',p:3}],
+        top10_ytd:[{c:'Sweden',p:13},{c:'United Kingdom',p:12},{c:'Germany',p:9},{c:'USA',p:8},{c:'France',p:8},{c:'Australia',p:6},{c:'Netherlands',p:3},{c:'Italy',p:3},{c:'Finland',p:3},{c:'Spain',p:3}]
+      },
+      feb:{
+        visitors_cm:19227,visitors_ytd:36071,
+        yoy_cm:-3,yoy_ytd:-3,
+        ticket_cm:null,ticket_ytd:null,
+        atp_cm:null,atp_ytd:null,
+        occupancy:40,
+        swedish_ytd:13,intl_ytd:87,
+        countries:102,
+        region_cm:[{n:'Europe',p:48},{n:'Nordics',p:8},{n:'UK',p:14},{n:'Sweden',p:13},{n:'USA',p:8},{n:'RoW',p:10}],
+        region_ytd:[{n:'Europe',p:47},{n:'Nordics',p:7},{n:'UK',p:13},{n:'Sweden',p:13},{n:'USA',p:8},{n:'RoW',p:12}],
+        top10_cm:[{c:'United Kingdom',p:14},{c:'Sweden',p:13},{c:'Germany',p:9},{c:'USA',p:8},{c:'France',p:8},{c:'Finland',p:4},{c:'Netherlands',p:3},{c:'Poland',p:3},{c:'Australia',p:3},{c:'Austria',p:3}],
+        top10_ytd:[{c:'Sweden',p:13},{c:'United Kingdom',p:13},{c:'Germany',p:9},{c:'USA',p:8},{c:'France',p:8},{c:'Australia',p:4},{c:'Finland',p:4},{c:'Netherlands',p:3},{c:'Poland',p:3},{c:'Italy',p:3}]
+      },
+      mar:{
+        visitors_cm:21483,visitors_ytd:57554,
+        yoy_cm:4,yoy_ytd:-1,
+        ticket_cm:5100000,ticket_ytd:13000000,
+        atp_cm:239,atp_ytd:226,
+        occupancy:36,
+        swedish_ytd:16,intl_ytd:84,
+        countries:114,
+        region_cm:[{n:'Europe',p:44},{n:'Nordics',p:9},{n:'UK',p:12},{n:'Sweden',p:16},{n:'USA',p:10},{n:'RoW',p:9}],
+        region_ytd:[{n:'Europe',p:45},{n:'Nordics',p:8},{n:'UK',p:12},{n:'Sweden',p:16},{n:'USA',p:8},{n:'RoW',p:11}],
+        top10_cm:[{c:'Sweden',p:16},{c:'United Kingdom',p:12},{c:'Germany',p:11},{c:'United States',p:10},{c:'France',p:6},{c:'Finland',p:4},{c:'Netherlands',p:3},{c:'Spain',p:3},{c:'Austria',p:3},{c:'Denmark',p:2}],
+        top10_ytd:[{c:'Sweden',p:16},{c:'United Kingdom',p:12},{c:'Germany',p:9},{c:'United States',p:8},{c:'France',p:7},{c:'Finland',p:4},{c:'Australia',p:3},{c:'Netherlands',p:3},{c:'Spain',p:3},{c:'Poland',p:3}]
+      }
+    }
+  },
+  ae:{
+    targets:{occupancy:[12,13,13,21,20,20,30,32,18,20,17,20]},
+    months:{
+      jan:{
+        visitors_cm:3087,visitors_ytd:3087,
+        yoy_cm:-13,yoy_ytd:-13,
+        ticket_cm:700000,ticket_ytd:700000,
+        atp_cm:203,atp_ytd:203,
+        occupancy:12,
+        swedish_ytd:27,intl_ytd:73,
+        countries:72,
+        region_cm:[{n:'Europe',p:47},{n:'Nordics',p:7},{n:'RoW',p:13},{n:'Sweden',p:16},{n:'UK',p:11},{n:'USA',p:6}],
+        region_ytd:[{n:'Europe',p:47},{n:'Nordics',p:7},{n:'RoW',p:13},{n:'Sweden',p:16},{n:'UK',p:11},{n:'USA',p:6}],
+        top10_cm:[{c:'Sweden',p:16},{c:'United Kingdom',p:11},{c:'France',p:10},{c:'Germany',p:7},{c:'Italy',p:7},{c:'USA',p:6},{c:'Finland',p:5},{c:'Australia',p:4},{c:'Netherlands',p:4},{c:'Estonia',p:2}],
+        top10_ytd:[{c:'Sweden',p:16},{c:'United Kingdom',p:11},{c:'France',p:10},{c:'Germany',p:7},{c:'Italy',p:7},{c:'USA',p:6},{c:'Finland',p:5},{c:'Australia',p:4},{c:'Netherlands',p:4},{c:'Estonia',p:2}]
+      },
+      feb:{
+        visitors_cm:3366,visitors_ytd:6453,
+        yoy_cm:-28,yoy_ytd:-22,
+        ticket_cm:null,ticket_ytd:null,
+        atp_cm:null,atp_ytd:null,
+        occupancy:15,
+        swedish_ytd:17,intl_ytd:83,
+        countries:78,
+        region_cm:[{n:'Europe',p:42},{n:'Nordics',p:6},{n:'RoW',p:11},{n:'Sweden',p:24},{n:'UK',p:10},{n:'USA',p:7}],
+        region_ytd:[{n:'Europe',p:41},{n:'Nordics',p:9},{n:'RoW',p:9},{n:'Sweden',p:25},{n:'UK',p:10},{n:'USA',p:6}],
+        top10_cm:[{c:'Sweden',p:16},{c:'United Kingdom',p:11},{c:'France',p:10},{c:'Germany',p:7},{c:'Italy',p:7},{c:'USA',p:6},{c:'Finland',p:5},{c:'Australia',p:4},{c:'Netherlands',p:4},{c:'Estonia',p:2}],
+        top10_ytd:[{c:'Sweden',p:17},{c:'United Kingdom',p:11},{c:'France',p:9},{c:'Germany',p:6},{c:'Italy',p:6},{c:'USA',p:6},{c:'Finland',p:5},{c:'Netherlands',p:4},{c:'Australia',p:3},{c:'Switzerland',p:2}]
+      },
+      mar:{
+        visitors_cm:3194,visitors_ytd:9647,
+        yoy_cm:-21,yoy_ytd:-21,
+        ticket_cm:700000,ticket_ytd:2000000,
+        atp_cm:216,atp_ytd:200,
+        occupancy:13,
+        swedish_ytd:17,intl_ytd:83,
+        countries:78,
+        region_cm:[{n:'Europe',p:42},{n:'Nordics',p:6},{n:'RoW',p:11},{n:'Sweden',p:24},{n:'UK',p:10},{n:'USA',p:7}],
+        region_ytd:[{n:'Europe',p:41},{n:'Nordics',p:9},{n:'RoW',p:9},{n:'Sweden',p:25},{n:'UK',p:10},{n:'USA',p:6}],
+        top10_cm:[{c:'Sweden',p:16},{c:'United Kingdom',p:11},{c:'France',p:10},{c:'Germany',p:7},{c:'Italy',p:7},{c:'USA',p:6},{c:'Finland',p:5},{c:'Australia',p:4},{c:'Netherlands',p:4},{c:'Estonia',p:2}],
+        top10_ytd:[{c:'Sweden',p:17},{c:'United Kingdom',p:11},{c:'France',p:9},{c:'Germany',p:6},{c:'Italy',p:6},{c:'USA',p:6},{c:'Finland',p:5},{c:'Netherlands',p:4},{c:'Australia',p:3},{c:'Switzerland',p:2}]
+      }
+    }
+  }
+};
+// ═══════════════════════════════════════════════════════════════════
+// RENDERING ENGINE — DO NOT EDIT BELOW THIS LINE
+// ═══════════════════════════════════════════════════════════════════
+const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function fmt(v,f){
+  if(v===null||v===undefined)return null;
+  if(f==='sek'){
+    if(Math.abs(v)>=1000000)return(v/1000000).toFixed(1)+'M';
+    if(Math.abs(v)>=1000)return(v/1000).toFixed(0)+'K';
+    return v.toLocaleString('sv-SE');
+  }
+  if(f==='pct')return v.toFixed(1)+'%';
+  if(f==='dec1')return v.toFixed(1)+'×';
+  if(f==='dec2')return v.toFixed(2);
+  if(Math.abs(v)>=1000000)return(v/1000000).toFixed(1)+'M';
+  if(Math.abs(v)>=1000)return(v/1000).toFixed(1)+'K';
+  return v.toLocaleString('sv-SE');
+}
+
+function isPct(f){return f==='pct'||f==='dec1';}
+
+function ytd(arr,f){
+  const v=arr.filter(x=>x!==null&&x!==undefined);
+  if(!v.length)return null;
+  if(isPct(f))return v.reduce((a,b)=>a+b,0)/v.length;
+  return v.reduce((a,b)=>a+b,0);
+}
+
+function ytdTarget(actuals,targets,f){
+  // sum/avg targets only for months that have actuals
+  const idxs=actuals.map((v,i)=>v!==null&&v!==undefined?i:-1).filter(i=>i>=0);
+  if(!idxs.length)return null;
+  const tvals=idxs.map(i=>targets[i]).filter(v=>v!==null&&v!==undefined);
+  if(!tvals.length)return null;
+  if(isPct(f))return tvals.reduce((a,b)=>a+b,0)/tvals.length;
+  return tvals.reduce((a,b)=>a+b,0);
+}
+
+function annTarget(targets,f){
+  const v=targets.filter(x=>x!==null&&x!==undefined);
+  if(!v.length)return null;
+  if(isPct(f))return v.reduce((a,b)=>a+b,0)/v.length;
+  return v.reduce((a,b)=>a+b,0);
+}
+
+function status(ytdA,ytdT,isGap,lib){
+  if(isGap)return{cls:'p-gap',txt:'Gap'};
+  if(ytdA===null||ytdT===null)return{cls:'p-e',txt:'—'};
+  const pct=lib?(ytdT/ytdA)*100:(ytdA/ytdT)*100;
+  if(pct>=100)return{cls:'p-g',txt:'On Track'};
+  if(pct>=90)return{cls:'p-y',txt:'At Risk'};
+  return{cls:'p-r',txt:'Off Track'};
+}
+
+function moCls(a,t,lib){
+  if(a===null||a===undefined||t===null||t===undefined)return'';
+  const pct=lib?(t/a)*100:(a/t)*100;
+  if(pct>=100)return' mc-g';
+  if(pct>=90)return' mc-y';
+  return' mc-r';
+}
+
+function buildCards(id,brand){
+  const d=DATA[brand];
+  const visitSec=d.sections.find(s=>s.id==='visit');
+  const vRow=visitSec.metrics.find(m=>m.label==='Visitors');
+  const revRow=visitSec.metrics.find(m=>m.label==='Ticket Revenue (SEK)');
+
+  // Visitor YTD
+  const ytdVis=ytd(vRow.actuals,'num');
+  const ytdVisTgt=ytdTarget(vRow.actuals,vRow.targets,'num');
+  const visVar=ytdVis!==null&&ytdVisTgt?((ytdVis/ytdVisTgt-1)*100):null;
+
+  // Revenue YTD (use actual revenue if available, else estimate from visitors)
+  let ytdRevActual=null;
+  if(revRow){ytdRevActual=ytd(revRow.actuals,'sek');}
+  const ytdRevEst=ytdVis!==null?(ytdVis*d.avgTicket):null;
+  const ytdRevDisplay=ytdRevActual!==null?ytdRevActual:ytdRevEst;
+  const ytdRevTgt=revRow?ytdTarget(revRow.actuals,revRow.targets,'sek'):null;
+  const revVar=ytdRevDisplay!==null&&ytdRevTgt?((ytdRevDisplay/ytdRevTgt-1)*100):null;
+
+  // Gaps count
+  let gaps=0,offTrackCount=0;
+  d.sections.forEach(s=>s.metrics.forEach(m=>{
+    if(m.is_divider){
+      breakHtml+='<div class="psub-divider">'+he(m.label)+'</div>';
+      return;
+    }
+    if(m.is_gap)gaps++;
+    else{
+      const a=ytd(m.actuals,m.fmt);
+      const t=ytdTarget(m.actuals,m.targets,m.fmt);
+      if(a!==null&&t!==null){
+        const lib=m.lower_is_better||false;
+        const p=lib?(t/a)*100:(a/t)*100;
+        if(p<90)offTrackCount++;
+      }
+    }
+  }));
+
+  // Visitor pacing
+  const vPaceCls=visVar===null?'':(visVar>=0?'vp':(visVar>=-10?'vw':'vn'));
+  const vPaceTxt=visVar===null?'No data':(visVar>=0?'On Track':(visVar>=-10?'At Risk':'Off Track'));
+
+  // Channel health — IG engagement
+  const igSec=d.sections.find(s=>s.id==='ig');
+  let igEngRow=igSec?igSec.metrics.find(m=>m.label.startsWith('Engagement Rate')):null;
+  const igEngActual=igEngRow?ytd(igEngRow.actuals,'pct'):null;
+  const igEngTgt=igEngRow?ytdTarget(igEngRow.actuals,igEngRow.targets,'pct'):null;
+  const igEngCls=igEngActual===null?'':((igEngActual>=igEngTgt)?'vp':'vw');
+
+  const el=document.getElementById(id);
+  el.innerHTML=`
+  <div class="exec-card">
+    <div class="card-label">YTD Visitors</div>
+    <div class="card-value">${ytdVis!==null?fmt(ytdVis,'num'):'—'}</div>
+    <div class="card-sub">YTD target: ${ytdVisTgt!==null?fmt(ytdVisTgt,'num'):'—'} · Full year: ${fmt(d.fullYearTarget,'num')}</div>
+    <div class="card-var">${visVar!==null?`<span class="${vPaceCls}">${visVar>=0?'+':''}${visVar.toFixed(1)}% vs YTD target</span>`:'<span style="color:#333">Awaiting data</span>'}</div>
+  </div>
+  <div class="exec-card">
+    <div class="card-label">YTD Revenue</div>
+    <div class="card-value">${ytdRevDisplay!==null?fmt(ytdRevDisplay,'sek'):'—'}</div>
+    <div class="card-sub">${ytdRevActual!==null?'Ticket sales actual':'Visitors × '+d.avgTicket+' SEK (est.)'} · Target: ${ytdRevTgt!==null?fmt(ytdRevTgt,'sek'):'—'}</div>
+    <div class="card-var">${revVar!==null?`<span class="${revVar>=0?'vp':(revVar>=-10?'vw':'vn')}">${revVar>=0?'+':''}${revVar.toFixed(1)}% vs target</span>`:'<span style="color:#333">—</span>'}</div>
+  </div>
+  <div class="exec-card">
+    <div class="card-label">Visitor Pacing</div>
+    <div class="card-value" style="font-size:20px;padding-top:2px"><span class="${vPaceCls}">${vPaceTxt}</span></div>
+    <div class="card-sub">YTD actual vs YTD budget</div>
+    <div class="card-var" style="color:#444">${visVar!==null?Math.abs(visVar).toFixed(1)+'% '+(visVar>=0?'ahead of':'behind') +' budget':'Awaiting data'}</div>
+  </div>
+  <div class="exec-card">
+    <div class="card-label">Channel Engagement</div>
+    <div class="card-value" style="font-size:20px;padding-top:2px"><span class="${igEngCls}">${igEngActual!==null?igEngActual.toFixed(1)+'%':'—'}</span></div>
+    <div class="card-sub">IG engagement rate · Target: ${igEngTgt!==null?igEngTgt.toFixed(1)+'%':'—'}</div>
+    <div class="card-var" style="color:#444">${igEngActual!==null&&igEngTgt?((igEngActual/igEngTgt*100).toFixed(0)+'% of target'):'Social performance'}</div>
+  </div>
+  <div class="exec-card">
+    <div class="card-label">Alerts</div>
+    <div class="card-value" style="color:${(offTrackCount+gaps)>0?'#ef4444':'#22c55e'}">${offTrackCount+gaps}</div>
+    <div class="card-sub"><span style="color:#ef4444">${offTrackCount} off track</span> · <span style="color:#f97316">${gaps} tracking gaps</span></div>
+    <div class="card-var" style="color:${(offTrackCount+gaps)>0?'#f97316':'#22c55e'}">${(offTrackCount+gaps)>0?'Review required':'All systems nominal'}</div>
+  </div>`;
+}
+
+function buildTables(id,brand){
+  const d=DATA[brand];
+  const pill=brand==='atm'?'<span class="bp bp-atm">ATM</span>':'<span class="bp bp-ae">AE</span>';
+  let html='';
+  d.sections.forEach(sec=>{
+    html+=`<div class="sec-head"><div class="sec-title">${sec.title}</div>${pill}</div>`;
+    if(sec.id==='paid'){html+=buildPaidHTML(brand);return;}
+    html+=`<div class="tbl-wrap"><table>`;
+    // Header
+    html+=`<thead><tr>
+      <th class="th-m">Metric</th>`;
+    MO.forEach(m=>html+=`<th class="th-mo">${m}</th>`);
+    html+=`<th class="th-ytd th-sep">YTD</th>
+      <th class="th-ytgt">YTD Tgt</th>
+      <th class="th-var">Var%</th>
+      <th class="th-ann">Ann. Target</th>
+      <th class="th-bench">Benchmark</th>
+      <th class="th-st">Status</th>
+    </tr></thead><tbody>`;
+
+    sec.metrics.forEach(m=>{
+      if(m.is_divider){
+        html+=`<tr class="layer-row"><td colspan="17">${m.label}</td></tr>`;
+        return;
+      }
+      const lib=m.lower_is_better||false;
+      const isGap=m.is_gap||false;
+      const ytdA=ytd(m.actuals,m.fmt);
+      const ytdT=ytdTarget(m.actuals,m.targets,m.fmt);
+      const annT=annTarget(m.targets,m.fmt);
+      const varPct=ytdA!==null&&ytdT?((lib?(ytdT/ytdA-1):(ytdA/ytdT-1))*100):null;
+      const st=status(ytdA,ytdT,isGap,lib);
+
+      let varHtml='<span style="color:#252525">—</span>';
+      if(varPct!==null){
+        const vc=varPct>=0?'vp':(varPct>=-10?'vw':'vn');
+        varHtml=`<span class="${vc}">${varPct>=0?'+':''}${varPct.toFixed(1)}%</span>`;
+      }
+
+      const rowCls=isGap?' class="gap-row"':'';
+      html+=`<tr${rowCls}>`;
+      html+=`<td class="td-m">${m.label}</td>`;
+
+      for(let i=0;i<12;i++){
+        const a=m.actuals[i];
+        const t=m.targets[i];
+        const haA=a!==null&&a!==undefined;
+        const haT=t!==null&&t!==undefined;
+        const cls=haA?`cv-a${moCls(a,t,lib)}`:(haT?'cv-t':'');
+        const val=haA?fmt(a,m.fmt):(haT?fmt(t,m.fmt):'');
+        html+=`<td class="${cls}">${val||''}</td>`;
+      }
+
+      html+=`<td class="td-ytd td-sep">${ytdA!==null?fmt(ytdA,m.fmt):'—'}</td>`;
+      html+=`<td class="td-ytgt">${ytdT!==null?fmt(ytdT,m.fmt):'—'}</td>`;
+      html+=`<td class="td-var">${varHtml}</td>`;
+      html+=`<td class="td-ann">${annT!==null?fmt(annT,m.fmt):'—'}</td>`;
+      html+=`<td class="td-bench">${m.bench||''}</td>`;
+      html+=`<td><span class="pill ${st.cls}">${st.txt}</span></td>`;
+      html+=`</tr>`;
+    });
+
+    html+=`</tbody></table></div>`;
+    // Section insight note
+    if(sec.note){
+      const nc=brand==='atm'?'#a0784033':'#0284c733';
+      const tc=brand==='atm'?'#7a5c2e':'#0369a1';
+      const bg=brand==='atm'?'#fdf7ee':'#eff8ff';
+      html+=`<div style="margin:4px 0 12px;padding:8px 12px;background:${bg};border-left:2px solid ${nc};font-size:10px;color:${tc};line-height:1.5">${sec.note}</div>`;
+    }
+  });
+  document.getElementById(id).innerHTML=html;
+}
+
+
+// ── VISITOR INSIGHT ENGINE ────────────────────────────────────────────
+let activeVisitorMonth='mar';
+
+function selVisitorMonth(mo,el){
+  document.querySelectorAll('.vis-month-btn').forEach(b=>b.classList.remove('vm-active'));
+  el.classList.add('vm-active');
+  activeVisitorMonth=mo;
+  buildVisitorPanels(mo);
+}
+
+function buildVisitorPanels(mo){
+  buildVisitorPanel('atm',mo);
+  buildVisitorPanel('ae',mo);
+  setTimeout(()=>{
+    drawVisTrendChart('vis-tc-atm','atm','#8c6a2f');
+    drawVisTrendChart('vis-tc-ae','ae','#1d6fa4');
+    drawOccChart('vis-oc-atm','atm','#8c6a2f');
+    drawOccChart('vis-oc-ae','ae','#1d6fa4');
+  },30);
+}
+
+function buildVisitorPanel(brand,mo){
+  const vi=VI[brand];
+  const color=brand==='atm'?'#8c6a2f':'#1d6fa4';
+  const bName=brand==='atm'?'ABBA The Museum':'Avicii Experience';
+  const badge=brand==='atm'?'bp-atm':'bp-ae';
+  const fullYear=brand==='atm'?434517:68308;
+
+  // Determine data slice
+  const isYTD=mo==='ytd';
+  const mKey=isYTD?'mar':mo;
+  const md=vi.months[mKey];
+  if(!md){document.getElementById('vis-panel-'+brand).innerHTML='<p style="padding:20px;color:#9a8f84">No data for this period</p>';return;}
+
+  const vis_a=isYTD?md.visitors_ytd:md.visitors_cm;
+  const vis_b=isYTD?null:md.visitors_ytd;
+  const yoy_a=isYTD?md.yoy_ytd:md.yoy_cm;
+  const yoy_b=isYTD?null:md.yoy_ytd;
+  const tkt_a=isYTD?(md.ticket_ytd):(md.ticket_cm);
+  const tkt_b=isYTD?null:md.ticket_ytd;
+  const atp_a=isYTD?md.atp_ytd:md.atp_cm;
+  const atp_b=isYTD?null:md.atp_ytd;
+  const occ_a=md.occupancy;
+  const region=isYTD?md.region_ytd:md.region_cm;
+  const top10=isYTD?md.top10_ytd:md.top10_cm;
+  const moLabel=isYTD?'YTD Jan–Mar':(['January','February','March'][['jan','feb','mar'].indexOf(mo)]);
+
+  function yoySpan(v){
+    if(v===null||v===undefined)return '<span style="color:#bbb6aa">—</span>';
+    const cl=v>0?'vp':(v<0?'vn':'');
+    return `<span class="${cl}">${v>0?'+':''}${v}% YoY</span>`;
+  }
+  function fmtM(v){if(v===null||v===undefined)return'—';if(v>=1000000)return(v/1000000).toFixed(1)+'M SEK';if(v>=1000)return Math.round(v/1000)+'K SEK';return v+' SEK';}
+  function fmtV(v){if(v===null||v===undefined)return'—';if(v>=1000)return v.toLocaleString('en-SE');return String(v);}
+
+  // Occupancy target for this month
+  const moIdx=['jan','feb','mar'].indexOf(mKey);
+  const occTgt=vi.targets.occupancy[moIdx>=0?moIdx:2];
+  const occCls=occ_a>=occTgt?'vp':(occ_a>=occTgt*0.9?'vw':'vn');
+
+  // Peer comparison data (Stockholmsmuseer context)
+  const peers=brand==='atm'
+    ?[{n:'ABBA The Museum',v:vis_a,color:color},{n:'Fotografiska',v:null,color:'#aaa'},{n:'Vasa Museum',v:null,color:'#aaa'},{n:'Nordic Museum',v:null,color:'#aaa'}]
+    :null;
+
+  let html=`
+  <div class="vis-brand-head">
+    <span class="vis-brand-name" style="color:${color}">${bName}</span>
+    <span class="bp ${badge}">${brand.toUpperCase()}</span>
+    <span style="flex:1"></span>
+    <span style="font-size:10px;color:#9a8f84;font-weight:600">${moLabel}</span>
+  </div>
+
+  <div class="vis-section-lbl">Overview</div>
+  <div class="vis-stat-grid">
+    <div class="vis-stat">
+      <div class="vis-stat-lbl">${isYTD?'YTD':'CM'} Visitors</div>
+      <div class="vis-stat-val">${fmtV(vis_a)}</div>
+      <div class="vis-stat-yoy">${yoySpan(yoy_a)}</div>
+    </div>
+    <div class="vis-stat">
+      <div class="vis-stat-lbl">${isYTD?'Full-Year Tgt':'YTD Visitors'}</div>
+      <div class="vis-stat-val">${isYTD?fmtV(fullYear):fmtV(vis_b)}</div>
+      <div class="vis-stat-sub">${isYTD?'Full-year target':'YTD total'}</div>
+    </div>
+    <div class="vis-stat">
+      <div class="vis-stat-lbl">${isYTD?'YTD':'CM'} Ticket Sales</div>
+      <div class="vis-stat-val" style="font-size:15px">${tkt_a!==null?fmtM(tkt_a):'—'}</div>
+      <div class="vis-stat-sub">${isYTD?'':'YTD: '+(tkt_b!==null?fmtM(tkt_b):'—')}</div>
+    </div>
+    <div class="vis-stat">
+      <div class="vis-stat-lbl">${isYTD?'YTD':'CM'} Avg Ticket</div>
+      <div class="vis-stat-val">${atp_a!==null?atp_a+' SEK':'—'}</div>
+      <div class="vis-stat-sub">${isYTD?'':'YTD avg: '+(atp_b!==null?atp_b+' SEK':'—')}</div>
+    </div>
+  </div>
+
+  <div class="vis-section-lbl">Visitor Trend (Jan–Dec)</div>
+  <div class="vis-chart-box"><canvas id="vis-tc-${brand}" height="200"></canvas></div>
+
+  <div class="vis-section-lbl">Occupancy by Month</div>
+  <div class="vis-chart-box"><canvas id="vis-oc-${brand}" height="140"></canvas></div>
+  <div class="vis-occ-grid">`;
+
+  const moNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const atmActOcc=[32,40,36,null,null,null,null,null,null,null,null,null];
+  const aeActOcc=[12,15,13,null,null,null,null,null,null,null,null,null];
+  const actOcc=brand==='atm'?atmActOcc:aeActOcc;
+
+  for(let i=0;i<12;i++){
+    const av=actOcc[i];
+    const tv=vi.targets.occupancy[i];
+    const pct=av!==null?(av/tv*100):0;
+    const fillColor=av===null?'#e4ddd2':(pct>=100?'#22c55e':(pct>=90?'#eab308':'#ef4444'));
+    const fillW=av!==null?Math.min(100,av/tv*100):0;
+    html+=`<div class="vis-occ-cell">
+      <div class="vis-occ-mo">${moNames[i]}</div>
+      <div class="vis-occ-val" style="color:${av!==null?'#111':'#ccc'}">${av!==null?av+'%':'—'}</div>
+      <div class="vis-occ-tgt">Tgt: ${tv}%</div>
+      <div class="vis-occ-bar"><div class="vis-occ-fill" style="width:${fillW}%;background:${fillColor}"></div></div>
+    </div>`;
+  }
+  html+=`</div>`;
+
+  // Audience geography
+  html+=`
+  <div class="vis-section-lbl">Audience Geography — ${isYTD?'YTD':'CM'} Region Split</div>`;
+
+  if(region&&region.length){
+    region.forEach(r=>{
+      html+=`<div class="vis-geo-item">
+        <div class="vis-geo-name">${r.n}</div>
+        <div class="vis-geo-bar-wrap"><div class="vis-geo-bar-fill" style="width:${r.p}%;background:${color}99"></div></div>
+        <div class="vis-geo-pct">${r.p}%</div>
+      </div>`;
+    });
+  }
+
+  // Swedish / Intl flags
+  html+=`
+  <div class="vis-flag-row" style="margin-top:12px">
+    <div class="vis-flag-card">
+      <div class="vis-flag-val">${md.swedish_ytd}%</div>
+      <div class="vis-flag-lbl">Swedish YTD</div>
+    </div>
+    <div class="vis-flag-card">
+      <div class="vis-flag-val">${md.intl_ytd}%</div>
+      <div class="vis-flag-lbl">International YTD</div>
+    </div>
+    <div class="vis-flag-card">
+      <div class="vis-flag-val">${md.countries}</div>
+      <div class="vis-flag-lbl">Nationalities</div>
+    </div>
+  </div>`;
+
+  // Top 10 countries
+  html+=`<div class="vis-section-lbl">Top 10 Countries — ${isYTD?'YTD':'CM'}</div>`;
+  if(top10&&top10.length){
+    const maxP=top10[0].p;
+    top10.forEach((row,i)=>{
+      html+=`<div class="vis-country-row">
+        <div class="vis-country-num">${i+1}</div>
+        <div class="vis-country-name">${row.c}</div>
+        <div class="vis-country-bar-wrap"><div class="vis-country-bar-fill" style="width:${Math.round(row.p/maxP*100)}%;background:${color}"></div></div>
+        <div class="vis-country-pct">${row.p}%</div>
+      </div>`;
+    });
+  }
+
+  document.getElementById('vis-panel-'+brand).innerHTML=html;
+}
+
+function drawVisTrendChart(canvasId,brand,color){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const W=canvas.parentElement.offsetWidth-20;
+  if(W<=0)return;
+  canvas.width=W;canvas.height=200;
+  const ctx=canvas.getContext('2d');
+  const sec=DATA[brand].sections.find(s=>s.id==='visit');
+  const m=sec?sec.metrics.find(x=>x.label==='Visitors'):null;
+  if(!m)return;
+  const MO2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const PAD={top:28,right:20,bottom:34,left:52};
+  const CW=W-PAD.left-PAD.right;
+  const CH=canvas.height-PAD.top-PAD.bottom;
+  ctx.fillStyle='#faf6ef';ctx.fillRect(0,0,W,canvas.height);
+  const actuals=m.actuals,targets=m.targets;
+  const allV=[...actuals,...targets].filter(v=>v!==null&&v>0);
+  if(!allV.length){ctx.fillStyle='#9a8f84';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('Awaiting data',W/2,canvas.height/2);return;}
+  const maxV=Math.max(...allV)*1.1;
+  const xS=i=>PAD.left+(i/11)*CW;
+  const yS=v=>PAD.top+CH-(v/maxV)*CH;
+  // Grid
+  for(let i=0;i<=4;i++){
+    const y=PAD.top+(i/4)*CH;
+    ctx.beginPath();ctx.strokeStyle='#e4ddd2';ctx.lineWidth=1;
+    ctx.moveTo(PAD.left,y);ctx.lineTo(W-PAD.right,y);ctx.stroke();
+    const gv=maxV*(1-i/4);
+    ctx.fillStyle='#9a8f84';ctx.font='8px -apple-system,sans-serif';ctx.textAlign='right';
+    ctx.fillText(gv>=1000?Math.round(gv/1000)+'K':Math.round(gv),PAD.left-4,y+3);
+  }
+  // Target dashed
+  const tPts=targets.map((v,i)=>v!=null?{x:xS(i),y:yS(v)}:null).filter(Boolean);
+  if(tPts.length>1){ctx.beginPath();ctx.setLineDash([4,3]);ctx.strokeStyle='#bbb6aa';ctx.lineWidth=1.5;tPts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);}
+  // Actuals fill + line
+  const aPts=actuals.map((v,i)=>v!=null?{x:xS(i),y:yS(v)}:null).filter(Boolean);
+  if(aPts.length>=2){
+    ctx.beginPath();ctx.moveTo(aPts[0].x,aPts[0].y);aPts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.lineTo(aPts[aPts.length-1].x,PAD.top+CH);ctx.lineTo(aPts[0].x,PAD.top+CH);ctx.closePath();
+    ctx.fillStyle=color+'22';ctx.fill();
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2.5;
+    aPts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));ctx.stroke();
+  }
+  aPts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#faf6ef';ctx.lineWidth=1.5;ctx.stroke();});
+  // Labels
+  ctx.fillStyle='#7a7068';ctx.font='8px -apple-system,sans-serif';ctx.textAlign='center';
+  MO2.forEach((mo,i)=>ctx.fillText(mo,xS(i),PAD.top+CH+14));
+  // Title
+  ctx.fillStyle=color;ctx.font='bold 10px -apple-system,sans-serif';ctx.textAlign='left';
+  ctx.fillText('Monthly Visitors — Actual vs Target',PAD.left,14);
+  // Legend
+  const lx=W-PAD.right-82;
+  ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.moveTo(lx,10);ctx.lineTo(lx+14,10);ctx.stroke();
+  ctx.fillStyle='#2a2a2a';ctx.font='8px sans-serif';ctx.textAlign='left';ctx.fillText('Actual',lx+17,13);
+  ctx.beginPath();ctx.setLineDash([4,3]);ctx.strokeStyle='#bbb6aa';ctx.lineWidth=1.5;ctx.moveTo(lx+48,10);ctx.lineTo(lx+62,10);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillText('Target',lx+65,13);
+}
+
+function drawOccChart(canvasId,brand,color){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const W=canvas.parentElement.offsetWidth-20;
+  if(W<=0)return;
+  canvas.width=W;canvas.height=140;
+  const ctx=canvas.getContext('2d');
+  const MO2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const vi=VI[brand];
+  const atmActOcc=[32,40,36,null,null,null,null,null,null,null,null,null];
+  const aeActOcc=[12,15,13,null,null,null,null,null,null,null,null,null];
+  const actOcc=brand==='atm'?atmActOcc:aeActOcc;
+  const tgtOcc=vi.targets.occupancy;
+  const allV=[...actOcc,...tgtOcc].filter(v=>v!==null&&v>0);
+  const maxV=Math.max(...allV)*1.15;
+  const PAD={top:22,right:16,bottom:28,left:38};
+  const CW=W-PAD.left-PAD.right;
+  const CH=canvas.height-PAD.top-PAD.bottom;
+  const bW=Math.floor(CW/12*0.55);
+  ctx.fillStyle='#faf6ef';ctx.fillRect(0,0,W,canvas.height);
+  // Title
+  ctx.fillStyle='#7a6e60';ctx.font='bold 9px -apple-system,sans-serif';ctx.textAlign='left';
+  ctx.fillText('Occupancy % — Actual vs Target',PAD.left,13);
+  // Grid
+  for(let i=0;i<=4;i++){
+    const y=PAD.top+(i/4)*CH;
+    ctx.beginPath();ctx.strokeStyle='#e4ddd2';ctx.lineWidth=1;
+    ctx.moveTo(PAD.left,y);ctx.lineTo(W-PAD.right,y);ctx.stroke();
+    const gv=maxV*(1-i/4);
+    ctx.fillStyle='#9a8f84';ctx.font='8px -apple-system,sans-serif';ctx.textAlign='right';
+    ctx.fillText(Math.round(gv)+'%',PAD.left-3,y+3);
+  }
+  const xS=i=>PAD.left+(i+0.5)*(CW/12);
+  const yS=v=>PAD.top+CH-(v/maxV)*CH;
+  // Target dots line
+  const tPts=tgtOcc.map((v,i)=>({x:xS(i),y:yS(v)}));
+  ctx.beginPath();ctx.setLineDash([3,3]);ctx.strokeStyle='#bbb6aa';ctx.lineWidth=1.5;
+  tPts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);
+  // Bars
+  for(let i=0;i<12;i++){
+    const av=actOcc[i];
+    const tv=tgtOcc[i];
+    const bH=av!==null?(av/maxV)*CH:0;
+    const bX=xS(i)-bW/2;
+    const bY=PAD.top+CH-bH;
+    if(av!==null){
+      const pct=av/tv*100;
+      const fc=pct>=100?color+'cc':(pct>=90?'#eab308cc':'#ef4444cc');
+      ctx.fillStyle=fc;
+      ctx.fillRect(bX,bY,bW,bH);
+    } else {
+      ctx.fillStyle='#e4ddd2';
+      ctx.fillRect(bX,PAD.top+CH-8,bW,8);
+    }
+    ctx.fillStyle='#7a7068';ctx.font='7px -apple-system,sans-serif';ctx.textAlign='center';
+    ctx.fillText(MO2[i],xS(i),PAD.top+CH+12);
+  }
+}
+
+function sw(brand,tab){
+  ['atm','ae','visitors','ae-pulse','ae-social','atm-pulse','atm-social'].forEach(v=>document.getElementById('view-'+v).style.display='none');
+  document.querySelectorAll('.brand-tab').forEach(t=>t.className='brand-tab');
+  if(brand==='visitors'){
+    tab.classList.add('active-tr');
+    document.getElementById('view-visitors').style.display='';
+    setTimeout(()=>buildVisitorPanels(activeVisitorMonth),60);
+    return;
+  }
+  if(brand==='ae-pulse'){tab.classList.add('active-ae');document.getElementById('view-ae-pulse').style.display='';buildAEPulse();return;}
+  if(brand==='atm-pulse'){tab.classList.add('active-atm');document.getElementById('view-atm-pulse').style.display='';buildATMPulse();return;}
+  document.getElementById('view-'+brand).style.display='';
+  tab.classList.add('active-'+brand);
+}
+
+// ── CHART ENGINE ──────────────────────────────────────────────────────────
+const CHART_METRICS=[
+  {label:'IG Reach',
+   atm:{sec:'ig',metric:'Reach'},
+   ae:{sec:'ig',metric:'Reach'}},
+  {label:'IG Engagement Rate',
+   atm:{sec:'ig',metric:'Engagement Rate % (by impressions)'},
+   ae:{sec:'ig',metric:'Engagement Rate %'}},
+  {label:'IG Follower Growth',
+   atm:{sec:'ig',metric:'Follower Growth'},
+   ae:{sec:'ig',metric:'Follower Growth'}},
+  {label:'Visitors',
+   atm:{sec:'visit',metric:'Visitors'},
+   ae:{sec:'visit',metric:'Visitors'}},
+  {label:'TikTok Views',
+   atm:{sec:'tiktok',metric:'Total Monthly Views'},
+   ae:{sec:'tiktok',metric:'Total Views'}},
+  {label:'TikTok Engagement',
+   atm:{sec:'tiktok',metric:'Engagement Rate %'},
+   ae:{sec:'tiktok',metric:'Engagement Rate %'}},
+];
+let activeChartIdx=0;
+
+function selChart(i,el){
+  document.querySelectorAll('.chart-btn').forEach(b=>b.classList.remove('cb-active'));
+  el.classList.add('cb-active');
+  activeChartIdx=i;
+  updateCharts();
+}
+
+function updateCharts(){
+  const cm=CHART_METRICS[activeChartIdx];
+  drawLineChart('chart-atm','atm',cm.atm.sec,cm.atm.metric,'#8c6a2f');
+  drawLineChart('chart-ae','ae',cm.ae.sec,cm.ae.metric,'#1d6fa4');
+}
+
+function fmtY(v){
+  if(v>=1000000)return(v/1000000).toFixed(1)+'M';
+  if(v>=10000)return Math.round(v/1000)+'K';
+  if(v>=1000)return(v/1000).toFixed(1)+'K';
+  if(v<10)return v.toFixed(1);
+  return Math.round(v).toString();
+}
+
+function drawLineChart(canvasId,brand,sectionId,metricLabel,color){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const W=canvas.parentElement.offsetWidth-40;
+  if(W<=0)return;
+  canvas.width=W; canvas.height=260;
+  const ctx=canvas.getContext('2d');
+  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const PAD={top:40,right:28,bottom:42,left:58};
+  const CW=W-PAD.left-PAD.right;
+  const CH=canvas.height-PAD.top-PAD.bottom;
+
+  ctx.fillStyle='#faf6ef';
+  ctx.fillRect(0,0,W,canvas.height);
+
+  const sec=DATA[brand].sections.find(s=>s.id===sectionId);
+  const m=sec?sec.metrics.find(x=>x.label===metricLabel):null;
+
+  if(!m){
+    ctx.fillStyle='#9a8f84';ctx.font='11px sans-serif';ctx.textAlign='center';
+    ctx.fillText('No data available',W/2,canvas.height/2);
+    return;
+  }
+  const actuals=m.actuals; const targets=m.targets;
+  const allV=[...actuals,...targets].filter(v=>v!==null&&v!==undefined&&v>0);
+  if(!allV.length){
+    ctx.fillStyle='#9a8f84';ctx.font='11px sans-serif';ctx.textAlign='center';
+    ctx.fillText('Awaiting data',W/2,canvas.height/2);
+    return;
+  }
+  const maxV=Math.max(...allV)*1.13; const minV=0;
+  const xS=i=>PAD.left+(i/11)*CW;
+  const yS=v=>PAD.top+CH-((v-minV)/(maxV-minV))*CH;
+
+  // Grid lines + Y labels
+  for(let i=0;i<=4;i++){
+    const y=PAD.top+(i/4)*CH;
+    ctx.beginPath();ctx.strokeStyle='#e4ddd2';ctx.lineWidth=1;
+    ctx.moveTo(PAD.left,y);ctx.lineTo(W-PAD.right,y);ctx.stroke();
+    const gv=minV+(maxV-minV)*(1-i/4);
+    ctx.fillStyle='#9a8f84';ctx.font='9px -apple-system,sans-serif';
+    ctx.textAlign='right';ctx.fillText(fmtY(gv),PAD.left-5,y+4);
+  }
+
+  // Target dashed line
+  const tPts=targets.map((v,i)=>(v!=null)?{x:xS(i),y:yS(v)}:null).filter(Boolean);
+  if(tPts.length>1){
+    ctx.beginPath();ctx.setLineDash([5,4]);ctx.strokeStyle='#bbb6aa';ctx.lineWidth=1.5;
+    tPts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // Actuals line + fill
+  const aPts=actuals.map((v,i)=>(v!=null)?{x:xS(i),y:yS(v)}:null).filter(Boolean);
+  if(aPts.length>=2){
+    ctx.beginPath();
+    ctx.moveTo(aPts[0].x,aPts[0].y);
+    aPts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.lineTo(aPts[aPts.length-1].x,PAD.top+CH);
+    ctx.lineTo(aPts[0].x,PAD.top+CH);
+    ctx.closePath();
+    ctx.fillStyle=color+'1a';ctx.fill();
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2.5;
+    aPts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.stroke();
+  }
+
+  // Dots on actuals
+  aPts.forEach(p=>{
+    ctx.beginPath();ctx.arc(p.x,p.y,4.5,0,Math.PI*2);
+    ctx.fillStyle=color;ctx.fill();
+    ctx.strokeStyle='#faf6ef';ctx.lineWidth=2;ctx.stroke();
+  });
+
+  // Month labels
+  ctx.fillStyle='#7a7068';ctx.font='9px -apple-system,sans-serif';ctx.textAlign='center';
+  MO.forEach((mo,i)=>ctx.fillText(mo,xS(i),PAD.top+CH+16));
+
+  // Brand title + metric name
+  const bName=brand==='atm'?'ABBA The Museum':'Avicii Experience';
+  ctx.fillStyle=color;ctx.font='bold 12px -apple-system,sans-serif';ctx.textAlign='left';
+  ctx.fillText(bName,PAD.left,18);
+  ctx.fillStyle='#7a7068';ctx.font='10px -apple-system,sans-serif';
+  ctx.fillText(metricLabel,PAD.left,30);
+
+  // Legend
+  const lx=W-PAD.right-110;
+  ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2.5;
+  ctx.moveTo(lx,16);ctx.lineTo(lx+18,16);ctx.stroke();
+  ctx.beginPath();ctx.arc(lx+9,16,3,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+  ctx.fillStyle='#2a2a2a';ctx.font='9px -apple-system,sans-serif';ctx.textAlign='left';
+  ctx.fillText('Actual',lx+22,20);
+  ctx.beginPath();ctx.setLineDash([5,4]);ctx.strokeStyle='#bbb6aa';ctx.lineWidth=1.5;
+  ctx.moveTo(lx+60,16);ctx.lineTo(lx+78,16);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillText('Target',lx+82,20);
+}
+
+
+
+// ── AE PULSE (TEST) ──────────────────────────────────────────────────────────
+let activePulseSub='overview';
+let activeATMPulseSub='overview';
+let activeAESocialSub='overview';
+let activeATMSocialSub='overview';
+
+function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function selPulseSub(sub,el){
+  document.querySelectorAll('#view-ae-pulse .psn-btn').forEach(b=>b.classList.remove('psn-active'));
+  el.classList.add('psn-active');
+  activePulseSub=sub;
+  renderPulseSub(sub);
+}
+
+function renderPulseSub(sub){
+  const el=document.getElementById('pulse-sub-content');
+  if(!el)return;
+  if(sub==='overview'){el.innerHTML=buildPulseOverviewHTML();return;}
+  if(sub==='social'){el.innerHTML='<div id="ae-social-in-pulse"></div>';buildAESocial('ae-social-in-pulse');return;}
+  if(sub==='paid'){el.innerHTML='<div class="pulse-sub-wrap">'+buildAEPaidPulseHTML()+'</div>';return;}
+  const CFG={
+    visit:{ov:[
+      ['Visitors',false],
+      ['Ticket Revenue (SEK)',false],
+      ['YoY Growth %',false],
+      ['Occupancy %',false],
+    ]},
+    paid:{ov:[
+      ['Blended ROAS',false],
+      ['CPA — Cost per Ticket (SEK)',true],
+      ['Ticket Purchases from Paid',false],
+      ['Revenue from Paid Ads (SEK)',false],
+    ]},
+    crm:{ov:[
+      ['Open Rate %',false],
+      ['Click Rate %',false],
+      ['List Growth',false],
+      ['Unsubscribe Rate %',true],
+    ]},
+    ooh:{ov:[
+      ['Active Campaigns',false],
+      ['Total Reach',false],
+      ['Spend (SEK)',false],
+    ]},
+    events:{ov:[
+      ['Events Count',false],
+      ['Earned Reach',false],
+      ['Content Pieces',false],
+      ['Website Visits from Events',false],
+    ]},
+    search:{ov:[
+      ['Total Sessions',false],
+      ['Ticket Page Visits',false],
+      ['Web→Ticket CVR %',false],
+      ['Search Clicks (GSC)',false],
+    ]},
+  };
+  const cfg=CFG[sub];
+  if(!cfg){el.innerHTML='<div class="pulse-sub-wrap"><p style="color:#9a8f84">Not found</p></div>';return;}
+  const{html,trendSecId,trendLabel}=buildPulseSecHTML(sub,cfg.ov);
+  el.innerHTML=html;
+  if(trendSecId&&trendLabel){
+    setTimeout(()=>drawLineChart('psub-trend-'+trendSecId,'ae',trendSecId,trendLabel,'#1d6fa4'),30);
+  }
+}
+
+function buildPulseOverviewHTML(){
+  const ae=DATA.ae;
+
+  function getLatest(secId,label){
+    const s=ae.sections.find(x=>x.id===secId);
+    const m=s?s.metrics.find(x=>x.label===label):null;
+    if(!m)return{actual:null,target:null,fmt:'num'};
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    const actual=li>=0?m.actuals[li]:null;
+    const target=li>=0?m.targets[li]:(m.targets.find(v=>v!==null&&v!==undefined)||null);
+    return{actual,target,fmt:m.fmt};
+  }
+
+  // Business Output — VI for YTD (AE visit actuals unreliable)
+  const visitSec=ae.sections.find(x=>x.id==='visit');
+  const visitMet=visitSec?visitSec.metrics.find(x=>x.label==='Visitors'):null;
+  const visTarget=visitMet?ytdTarget([3087,3366,3194],visitMet.targets,'num'):null;
+  const visActual=VI.ae.months.mar.visitors_ytd;
+  const revMet=visitSec?visitSec.metrics.find(x=>x.label==='Ticket Revenue (SEK)'):null;
+  const revTarget=revMet?ytdTarget([3087,3366,3194],revMet.targets,'sek'):null;
+  const revActual=VI.ae.months.mar.ticket_ytd;
+  const yoyYTD=VI.ae.months.mar.yoy_ytd;
+
+  const ticketPaid=getLatest('paid','Ticket Purchases from Paid');
+  const igReach=getLatest('ig','Reach');
+  const ttViews=getLatest('tiktok','Total Views');
+  const igEng=getLatest('ig','Engagement Rate %');
+  const newsOpen=getLatest('crm','Open Rate %');
+
+  function ragCl(a,t,lib){
+    if(a===null||a===undefined)return'rpt-na';
+    if(t===null||t===undefined)return'rpt-na';
+    const ratio=lib?(t/a):(a/t);
+    return ratio>=1?'vp':(ratio>=0.9?'vw':'vn');
+  }
+
+  function mkMet(name,valStr,valCl,barPct,ctxStr){
+    return'<div class="rpt-metric">'
+      +'<div class="rpt-met-name">'+he(name)+'</div>'
+      +'<div class="rpt-val-lg '+valCl+'">'+valStr+'</div>'
+      +'<div class="rpt-bar-wrap"><div class="rpt-bar" style="width:'+barPct.toFixed(1)+'%"></div></div>'
+      +'<div class="rpt-met-ctx">'+ctxStr+'</div>'
+      +'</div>';
+  }
+
+  function liveMet(d,name,lib){
+    const a=d.actual,t=d.target,f=d.fmt;
+    const cl=ragCl(a,t,lib);
+    const valStr=a!==null?fmt(a,f):'—';
+    const bp=(a!==null&&t!==null&&t!==0)?Math.min(100,lib?(t/a)*100:(a/t)*100):0;
+    let ctx='';
+    if(a!==null&&t!==null&&t!==0){
+      const p=lib?(t/a)*100:(a/t)*100;
+      const pcl=p>=100?'vp':(p>=90?'vw':'vn');
+      ctx='Mål '+fmt(t,f)+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
+    }else if(a===null)ctx='Inväntar data';
+    return mkMet(name,valStr,cl,bp,ctx);
+  }
+
+  // Visitor YTD (with YoY)
+  function visMet(){
+    const a=visActual,t=visTarget;
+    const cl=ragCl(a,t,false);
+    const valStr=a!==null?fmt(a,'num'):'—';
+    const bp=(a!==null&&t!==null&&t!==0)?Math.min(100,(a/t)*100):0;
+    let ctx='';
+    if(a!==null&&t!==null){
+      const p=(a/t)*100;
+      const pcl=p>=100?'vp':(p>=90?'vw':'vn');
+      ctx='Mål '+fmt(t,'num')+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
+    }
+    if(yoyYTD!==null&&yoyYTD!==undefined){
+      const ycl=yoyYTD>=0?'vp':'vn';
+      ctx+=(ctx?' · ':'')+'YoY: <span class="'+ycl+'">'+(yoyYTD>=0?'+':'')+yoyYTD+'%</span>';
+    }
+    if(!ctx)ctx='Inväntar data';
+    return mkMet('Besökare YTD · jan–mar',valStr,cl,bp,ctx);
+  }
+
+  // Revenue YTD
+  function revMet2(){
+    const a=revActual,t=revTarget;
+    const cl=ragCl(a,t,false);
+    const valStr=a!==null?fmt(a,'sek'):'—';
+    const bp=(a!==null&&t!==null&&t!==0)?Math.min(100,(a/t)*100):0;
+    let ctx='';
+    if(a!==null&&t!==null&&t!==0){
+      const p=(a/t)*100;
+      const pcl=p>=100?'vp':(p>=90?'vw':'vn');
+      ctx='Mål '+fmt(t,'sek')+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
+    }else ctx='Inväntar data';
+    return mkMet('Intäkter YTD · jan–mar',valStr,cl,bp,ctx);
+  }
+
+  // ROAS placeholder
+  function roasMet(){return mkMet('Blended ROAS','—','rpt-na',0,'Startar april 2026');}
+
+  // Placeholder metric (grey "xx")
+  function phMet(name,ctxStr){
+    return'<div class="rpt-metric">'
+      +'<div class="rpt-met-name">'+he(name)+'</div>'
+      +'<div class="rpt-val-ph">xx</div>'
+      +'<div class="rpt-bar-wrap"></div>'
+      +'<div class="rpt-met-ctx">'+he(ctxStr)+'</div>'
+      +'</div>';
+  }
+
+  // Tracking gaps
+  const gaps=[];
+  ae.sections.forEach(sec=>{sec.metrics.forEach(m=>{if(m.is_gap)gaps.push({label:m.label,bench:(m.bench||'').replace(/^⚠\s*/,'')});});});
+  let gapsHtml='';
+  if(gaps.length){
+    gapsHtml='<hr class="pulse-sep"><div class="pulse-gaps-head">⚠ Tracking Gaps ('+gaps.length+')</div>';
+    gaps.forEach(g=>{gapsHtml+='<div class="pulse-gap-item"><span class="pulse-gap-name">'+g.label+'</span><span class="pulse-gap-bench">'+he(g.bench)+'</span></div>';});
+  }
+
+  return'<div class="pulse-wrap">'
+    +'<div class="ov-hdr">'
+    +'<span class="ov-hdr-title">Avicii Experience — KPI Pulse</span>'
+    +'<span class="ov-hdr-date">Jan – Mar 2026 · uppdaterad mars 2026</span>'
+    +'</div>'
+    +'<hr class="ov-rule">'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">Business Output &amp; Paid Media</div>'
+    +'<div class="rpt-4col">'
+    +visMet()
+    +revMet2()
+    +liveMet(ticketPaid,'Ticketköp via paid',false)
+    +roasMet()
+    +'</div></div>'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">Social — Räckvidd &amp; Engagemang</div>'
+    +'<div class="rpt-4col">'
+    +liveMet(igReach,'IG Räckvidd · senaste mån',false)
+    +liveMet(ttViews,'TikTok visningar · senaste mån',false)
+    +liveMet(igEng,'IG engagemangsgrad · senaste mån',false)
+    +liveMet(newsOpen,'Nyhetsbrev öppningsgrad · senaste mån',false)
+    +'</div></div>'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">OOH / DOOH</div>'
+    +'<div class="rpt-pair">'
+    +phMet('Räckvidd','Mål sätt mål · ej satt')
+    +phMet('Share of Voice','Mål sätt mål · ej satt')
+    +'</div></div>'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">Events &amp; PR</div>'
+    +'<div class="rpt-pair">'
+    +phMet('Earned Reach','')
+    +phMet('Events Count','')
+    +'</div></div>'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">Search &amp; Website</div>'
+    +'<div class="rpt-pair">'
+    +phMet('Web → Ticket CVR','')
+    +phMet('Search Clicks','')
+    +'</div></div>'
+
+    +gapsHtml
+    +'</div>';
+}
+
+function buildPulseSecHTML(secId,overviewLabels){
+  const ae=DATA.ae;
+  const sec=ae.sections.find(s=>s.id===secId);
+  if(!sec)return{html:'<div class="pulse-sub-wrap"><p style="color:#9a8f84;padding:20px">Section not found</p></div>',trendSecId:null,trendLabel:null};
+
+  function latestOf(m){
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    return{actual:li>=0?m.actuals[li]:null,target:li>=0?m.targets[li]:(m.targets.find(v=>v!==null&&v!==undefined)||null)};
+  }
+  function ragPill(a,t,lib){
+    if(a===null||t===null)return'<span class="pill p-e">\u2014</span>';
+    const p=lib?(t/a)*100:(a/t)*100;
+    if(p>=100)return'<span class="pill p-g">On Track</span>';
+    if(p>=90) return'<span class="pill p-y">At Risk</span>';
+    return'<span class="pill p-r">Off Track</span>';
+  }
+  function ragCl(a,t,lib){if(a===null||t===null)return'';const p=lib?(t/a)*100:(a/t)*100;return p>=100?'vp':(p>=90?'vw':'vn');}
+  function pctStr(a,t,lib){if(a===null||t===null)return'\u2014';const p=lib?(t/a)*100:(a/t)*100;return'<span class="'+ragCl(a,t,lib)+'">'+p.toFixed(0)+'%</span>';}
+
+  // ── Overview cards ──
+  const cols=Math.min(overviewLabels.length,4);
+  let overHtml='<div class="vis-section-lbl">Overview</div>'
+    +'<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:10px;margin-bottom:4px">';
+  overviewLabels.forEach(([lbl,lib])=>{
+    const m=sec.metrics.find(x=>x.label===lbl&&!x.is_divider);
+    if(!m){overHtml+='';return;}
+    const{actual,target}=latestOf(m);
+    const cl=ragCl(actual,target,lib);
+    overHtml+='<div class="vis-stat">'
+      +'<div class="vis-stat-lbl">'+he(lbl)+'</div>'
+      +'<div class="vis-stat-val '+cl+'">'+(actual!==null?fmt(actual,m.fmt):'<span class="psub-await">Awaiting data</span>')+'</div>'
+      +'<div class="vis-stat-sub">Target: '+(target!==null?fmt(target,m.fmt):'—')+'</div>'
+      +'</div>';
+  });
+  overHtml+='</div>';
+
+  // ── Trend chart — only when non-null, non-zero actuals exist ──
+  const trendMet=sec.metrics.find(m=>!m.is_divider&&m.actuals.some(v=>v!==null&&v!==undefined&&v!==0));
+  let trendHtml='<div class="vis-section-lbl">Trend</div>';
+  if(trendMet){
+    trendHtml+='<div class="vis-chart-box"><canvas id="psub-trend-'+secId+'" height="180"></canvas></div>';
+  } else {
+    trendHtml+='<div class="psub-no-data">Trend data available from Apr 2026</div>';
+  }
+
+  // ── Full breakdown: all metrics ──
+  let breakHtml='<div class="vis-section-lbl">All Metrics</div>'
+    +'<div class="psub-breakdown">'
+    +'<div class="psub-header-row">'
+    +'<span class="psub-col-name">Metric</span>'
+    +'<span class="psub-col-num">Actual</span>'
+    +'<span class="psub-col-num">Target</span>'
+    +'<span class="psub-col-sm">vs Tgt</span>'
+    +'<span class="psub-col-st">Status</span>'
+    +'</div>';
+  sec.metrics.forEach(m=>{
+    if(m.is_divider)return;
+    const lib=m.lower_is_better||false;
+    const{actual,target}=latestOf(m);
+    const gapStyle=m.is_gap?'background:#fff5ee':'';
+    breakHtml+='<div class="psub-row" style="'+gapStyle+'">'
+      +'<div class="psub-row-main">'
+      +'<span class="psub-name">'+he(m.label)+'</span>'
+      +'<span class="psub-col-num psub-actual">'+(actual!==null?fmt(actual,m.fmt):'<span class="psub-await">Awaiting data</span>')+'</span>'
+      +'<span class="psub-col-num psub-target">'+(target!==null?fmt(target,m.fmt):'\u2014')+'</span>'
+      +'<span class="psub-col-sm">'+pctStr(actual,target,lib)+'</span>'
+      +'<span class="psub-col-st">'+ragPill(actual,target,lib)+'</span>'
+      +'</div>'
+      +(m.bench?'<div class="psub-bench">'+he(m.bench.replace(/^\u26a0\s*/,''))+'</div>':'')
+      +'</div>';
+  });
+  breakHtml+='</div>';
+
+  // Show section note if present
+  let noteHtml='';
+  if(sec.note){
+    noteHtml='<div class="social-insight" style="margin-top:12px">'+he(sec.note)+'</div>';
+  }
+
+  const html='<div class="pulse-sub-wrap">'+overHtml+trendHtml+breakHtml+noteHtml+'</div>';
+  return{html,trendSecId:trendMet?secId:null,trendLabel:trendMet?trendMet.label:null};
+}
+
+
+function buildPaidHTML(brand){
+  const d=DATA[brand];
+  const sec=d.sections.find(s=>s.id==='paid');
+  if(!sec)return'<p style="color:#9a8f84;padding:20px">Paid section not found</p>';
+
+  function getMet(lbl){return sec.metrics.find(m=>m.label===lbl)||null;}
+
+  function curActual(m){
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    return li>=0?m.actuals[li]:null;
+  }
+
+  function bestTarget(m){
+    return m.targets.find(v=>v!==null&&v!==undefined&&v!==0)||null;
+  }
+
+  function parseBT(bench){
+    const r={min:'\u2014',stretch:'\u2014'};
+    if(!bench)return r;
+    bench.split('\u00b7').map(s=>s.trim()).forEach(s=>{
+      if(/^Min:/i.test(s))r.min=s.replace(/^Min:\s*/i,'');
+      if(/^Stretch:/i.test(s))r.stretch=s.replace(/^Stretch:\s*/i,'');
+    });
+    return r;
+  }
+
+  function parseMinNum(bench){
+    if(!bench)return null;
+    for(const s of bench.split('\u00b7').map(s=>s.trim())){
+      if(/^Min:/i.test(s)){
+        const m=s.replace(/,/g,'').match(/(\d+\.?\d*)/);
+        return m?parseFloat(m[1]):null;
+      }
+    }
+    return null;
+  }
+
+  function trackerSt(actual,target,minVal,lib){
+    if(actual===null)return{cl:'p-e',label:'\u2014'};
+    if(target===null)return{cl:'p-e',label:'No target'};
+    const on=lib?actual<=target:actual>=target;
+    if(on)return{cl:'p-g',label:'On Target'};
+    if(minVal!==null){
+      const ok=lib?actual<=minVal:actual>=minVal;
+      if(ok)return{cl:'p-y',label:'At Risk'};
+      return{cl:'p-r',label:'Below Min'};
+    }
+    const p=lib?(target/actual)*100:(actual/target)*100;
+    return p>=85?{cl:'p-y',label:'At Risk'}:{cl:'p-r',label:'Off Track'};
+  }
+
+  // \u2500\u2500 KPI TRACKER \u2500\u2500
+  let trkH='<div class="paid-section-lbl">KPI Tracker</div>'
+    +'<div class="paid-tracker-wrap"><table class="paid-tracker-table">'
+    +'<thead><tr>'
+    +'<th class="ptk-name">KPI</th>'
+    +'<th class="ptk-thr ptk-min">Min</th>'
+    +'<th class="ptk-thr ptk-tgt">Target</th>'
+    +'<th class="ptk-thr ptk-str">Stretch</th>'
+    +'<th class="ptk-num">Current</th>'
+    +'<th class="ptk-st">Status</th>'
+    +'</tr></thead><tbody>';
+
+  sec.metrics.filter(m=>!m.is_divider&&!m.is_gap).forEach(m=>{
+    const actual=curActual(m);
+    const target=bestTarget(m);
+    const lib=m.lower_is_better||false;
+    const minVal=parseMinNum(m.bench);
+    const st=trackerSt(actual,target,minVal,lib);
+    const bt=parseBT(m.bench||'');
+    trkH+='<tr>'
+      +'<td class="ptk-name">'+he(m.label)+'</td>'
+      +'<td class="ptk-thr ptk-min">'+he(bt.min)+'</td>'
+      +'<td class="ptk-thr ptk-tgt">'+(target!==null?fmt(target,m.fmt):'\u2014')+'</td>'
+      +'<td class="ptk-thr ptk-str">'+he(bt.stretch)+'</td>'
+      +'<td class="ptk-num">'+(actual!==null?fmt(actual,m.fmt):'<span style="color:#bbb6aa">Starts Apr</span>')+'</td>'
+      +'<td class="ptk-st"><span class="pill '+st.cl+'">'+st.label+'</span></td>'
+      +'</tr>';
+  });
+  trkH+='</tbody></table></div>';
+
+  // \u2500\u2500 CHANNEL GROUPS \u2500\u2500
+  const GROUPS=brand==='ae'?[
+    {lbl:'Conversion & Revenue',mets:['Blended ROAS','CPA \u2014 Cost per Ticket (SEK)','Ticket Purchases from Paid','Revenue from Paid Ads (SEK)'],cols:4,bars:true},
+    {lbl:'Google Search',mets:['Google Search CTR %','Google Search CPC (SEK)'],cols:2},
+    {lbl:'Meta',mets:['Meta CTR %','Meta CPM (SEK)'],cols:2},
+    {lbl:'TikTok',mets:['TikTok CPM (SEK)','TikTok CTR %','TikTok CPC (SEK)'],cols:3},
+    {lbl:'Spend',mets:['Media Spend (SEK)'],cols:1},
+  ]:[
+    {lbl:'Conversion & Revenue',mets:['Blended ROAS','CPA \u2014 Cost per Ticket (SEK)','Ticket Purchases from Paid','Revenue from Paid Ads (SEK)'],cols:4,bars:true},
+    {lbl:'Google Search',mets:['Google Search CTR %','Google Search CPC (SEK)'],cols:2},
+    {lbl:'Meta',mets:['Meta CTR %','Meta CPM (SEK)','Meta CPC (SEK)'],cols:3},
+    {lbl:'TikTok',mets:['TikTok CTR %','TikTok CPC (SEK)'],cols:2},
+    {lbl:'Spend',mets:['Media Spend (SEK)'],cols:1},
+  ];
+
+  let grpH='';
+  GROUPS.forEach(({lbl,mets,cols,bars})=>{
+    grpH+='<div class="paid-section-lbl">'+he(lbl)+'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:10px;margin-bottom:16px">';
+    mets.forEach(ml=>{
+      const m=getMet(ml);
+      if(!m){
+        grpH+='<div class="paid-card" style="opacity:.4"><div class="paid-card-lbl">'+he(ml)+'</div><div class="paid-card-val pc-na">Not tracked</div></div>';
+        return;
+      }
+      const actual=curActual(m);
+      const target=bestTarget(m);
+      const lib=m.lower_is_better||false;
+      const minVal=parseMinNum(m.bench);
+      const st=trackerSt(actual,target,minVal,lib);
+      const bt=parseBT(m.bench||'');
+      const hasA=actual!==null;
+      let barH='';
+      if(bars&&hasA&&target!==null){
+        const pct=Math.min(100,lib?(target/actual)*100:(actual/target)*100);
+        const bc=st.cl==='p-g'?'#22c55e':(st.cl==='p-y'?'#eab308':'#ef4444');
+        barH='<div style="margin-top:8px;height:4px;background:#ece8e1;border-radius:2px"><div style="width:'+pct.toFixed(0)+'%;height:4px;background:'+bc+';border-radius:2px"></div></div>';
+      }
+      grpH+='<div class="paid-card">'
+        +'<div class="paid-card-lbl">'+he(m.label)+'</div>'
+        +'<div class="paid-card-val'+(hasA?'':' pc-na')+'">'+(hasA?fmt(actual,m.fmt):'Starts Apr')+'</div>'
+        +'<div class="paid-card-thr">'
+        +(bt.min!=='\u2014'?'<span class="pthr-min">Min '+he(bt.min)+'</span>':'')
+        +(target!==null?'<span class="pthr-tgt">Tgt '+fmt(target,m.fmt)+'</span>':'')
+        +(bt.stretch!=='\u2014'?'<span class="pthr-str">\u2191 '+he(bt.stretch)+'</span>':'')
+        +'</div>'
+        +(hasA?'<div class="paid-card-pill"><span class="pill '+st.cl+'">'+st.label+'</span></div>':'')
+        +barH
+        +'</div>';
+    });
+    grpH+='</div>';
+  });
+
+  return'<div style="padding:0 0 12px">'+trkH+grpH+'</div>';
+}
+function buildAEPulse(){
+  const NAV=[
+    {id:'overview', lbl:'Overview'},
+    {id:'visit',    lbl:'Visitation & Revenue'},
+    {id:'social',   lbl:'Social'},
+    {id:'paid',     lbl:'Paid Media'},
+    {id:'crm',      lbl:'Newsletter & CRM'},
+    {id:'ooh',      lbl:'OOH / DOOH'},
+    {id:'events',   lbl:'Events & PR'},
+    {id:'search',   lbl:'Search & Website'},
+  ];
+  if(['ig','tiktok','fb'].includes(activeATMPulseSub))activeATMPulseSub='overview';
+  let navHtml='<div class="pulse-sub-nav">';
+  NAV.forEach(it=>{
+    const ac=it.id===activePulseSub?' psn-active':'';
+    navHtml+='<button class="psn-btn'+ac+'" onclick="selPulseSub(\''+it.id+'\',this)">'+it.lbl+'</button>';
+  });
+  navHtml+='</div><div id="pulse-sub-content"></div>';
+  document.getElementById('view-ae-pulse').innerHTML=navHtml;
+  renderPulseSub(activePulseSub);
+}
+
+// ── AE SOCIAL (TEST) ─────────────────────────────────────────────────────────
+function selAESocialSub(sub,el){
+  document.querySelectorAll('.ae-social-container .psn-btn').forEach(b=>b.classList.remove('psn-active'));
+  el.classList.add('psn-active');
+  activeAESocialSub=sub;
+  renderAESocialSub(sub);
+}
+
+function renderAESocialSub(sub){
+  const el=document.getElementById('ae-social-sub-content');
+  if(!el)return;
+  if(sub==='overview'){
+    el.innerHTML=buildAESocialOverviewHTML();
+    setTimeout(()=>{
+      drawLineChart('soc-ig-reach','ae','ig','Reach','#1d6fa4');
+      drawLineChart('soc-tt-views','ae','tiktok','Total Views','#1d6fa4');
+    },30);
+    return;
+  }
+  const SOC_CFG={
+    ig:{ov:[['Reach',false],['Engagement Rate %',false],['Follower Growth',false],['Link Clicks',false]]},
+    tiktok:{ov:[['Total Views',false],['Engagement Rate %',false],['Followers Gained',false],['Profile Views',false]]},
+    fb:{ov:[['Reach',false],['Engagement Rate %',false],['Follower Growth',false],['Link Clicks',false]]},
+  };
+  const cfg=SOC_CFG[sub];
+  if(!cfg){el.innerHTML='<div class="pulse-sub-wrap"><p style="color:#9a8f84;padding:20px">Not found</p></div>';return;}
+  const{html,trendSecId,trendLabel}=buildPulseSecHTML(sub,cfg.ov);
+  el.innerHTML=html;
+  if(trendSecId&&trendLabel){
+    setTimeout(()=>drawLineChart('psub-trend-'+trendSecId,'ae',trendSecId,trendLabel,'#1d6fa4'),30);
+  }
+}
+
+function buildAESocialOverviewHTML(){
+  const ae=DATA.ae;
+  const igSec=ae.sections.find(s=>s.id==='ig');
+  const ttSec=ae.sections.find(s=>s.id==='tiktok');
+  const fbSec=ae.sections.find(s=>s.id==='fb');
+
+  function latest(sec,label){
+    if(!sec)return{a:null,t:null,fmt:'num'};
+    const m=sec.metrics.find(x=>x.label===label);
+    if(!m)return{a:null,t:null,fmt:'num'};
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    return{a:li>=0?m.actuals[li]:null,t:li>=0?m.targets[li]:null,fmt:m.fmt};
+  }
+  function ragCl(a,t,lib){
+    if(a===null||t===null)return'';
+    const p=lib?(t/a)*100:(a/t)*100;
+    return p>=100?'vp':(p>=90?'vw':'vn');
+  }
+  function fmtOrDash(a,f){return a!==null?fmt(a,f):'\u2014';}
+
+  const overKPIs=[
+    {lbl:'IG Reach',         ...latest(igSec,'Reach')},
+    {lbl:'IG Engagement',    ...latest(igSec,'Engagement Rate %')},
+    {lbl:'TikTok Views',     ...latest(ttSec,'Total Views')},
+    {lbl:'TikTok Engagement',...latest(ttSec,'Engagement Rate %')},
+    {lbl:'FB Reach',         ...latest(fbSec,'Reach')},
+  ];
+  let overHtml='';
+  overKPIs.forEach(k=>{
+    const cl=ragCl(k.a,k.t,false);
+    overHtml+='<div class="vis-stat">'
+      +'<div class="vis-stat-lbl">'+k.lbl+'</div>'
+      +'<div class="vis-stat-val '+cl+'">'+fmtOrDash(k.a,k.fmt)+'</div>'
+      +'<div class="vis-stat-sub">Target: '+fmtOrDash(k.t,k.fmt)+'</div>'
+      +'</div>';
+  });
+
+  function chRows(sec,metrics){
+    if(!sec)return'<div style="color:#9a8f84;font-size:10px;padding:8px 0">No data available</div>';
+    let h='';
+    metrics.forEach(item=>{
+      if(typeof item==='string'){
+        h+='<div class="social-kpi-divider">'+item+'</div>';
+        return;
+      }
+      const[lbl,lib]=item;
+      const m=sec.metrics.find(x=>x.label===lbl);
+      if(!m||m.is_divider)return;
+      let li=-1;
+      m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+      const a=li>=0?m.actuals[li]:null;
+      const t=li>=0?m.targets[li]:null;
+      const cl=ragCl(a,t,lib);
+      h+='<div class="social-kpi-row">'
+        +'<span class="social-kpi-name">'+lbl+'</span>'
+        +'<span class="social-kpi-val '+cl+'">'+fmtOrDash(a,m.fmt)+'</span>'
+        +'</div>';
+    });
+    return h;
+  }
+
+  function secNote(sec){
+    if(!sec||!sec.note)return'';
+    return'<div class="social-insight">'+sec.note+'</div>';
+  }
+
+  const igRows=chRows(igSec,[
+    ['Follower Growth',false],['Reach',false],['Impressions',false],
+    ['Profile Visits',false],['Link Clicks',false],['Link CTR %',false],
+    ['Engagement Rate %',false],['Engagement (interactions)',false]
+  ]);
+  const ttRows=chRows(ttSec,[
+    ['Total Views',false],['Engagement Rate %',false],['Followers Gained',false],
+    ['New Viewers',false],['Profile Views',false],['For You % (FYP traffic)',false],['Female Audience %',false]
+  ]);
+  const fbRows=chRows(fbSec,[
+    ['Follower Growth',false],['Reach',false],['Page Visits',false],
+    ['Link Clicks',false],['Content Interactions',false],['Engagement Rate %',false]
+  ]);
+
+  return'<div class="social-wrap">'
+    +'<div class="social-header">'
+    +'<span class="social-title">Avicii Experience \u2014 Social</span>'
+    +'<span class="bp bp-ae">AE</span>'
+    +'<span class="social-sub">\u00b7 Last updated: March 2026 \u00b7 YTD: Jan\u2013Mar</span>'
+    +'</div>'
+
+    +'<div class="vis-section-lbl">Overview \u2014 Latest Month Actuals vs Target</div>'
+    +'<div class="social-overview-grid">'+overHtml+'</div>'
+
+    +'<div class="vis-section-lbl">Trends (Jan\u2013Dec 2026)</div>'
+    +'<div class="social-trend-grid">'
+    +'<div class="vis-chart-box"><canvas id="soc-ig-reach" height="200"></canvas></div>'
+    +'<div class="vis-chart-box"><canvas id="soc-tt-views" height="200"></canvas></div>'
+    +'</div>'
+    +'<p style="font-size:9px;color:#9a8f84;font-style:italic;margin-bottom:16px">'
+    +'Solid line = monthly actuals &nbsp;\u00b7&nbsp; Dashed = monthly target</p>'
+
+    +'<div class="vis-section-lbl">Channel Breakdown \u2014 March 2026</div>'
+    +'<div class="social-channels">'
+    +'<div class="social-channel">'
+    +'<div class="social-ch-head">Instagram</div>'
+    +igRows+secNote(igSec)
+    +'</div>'
+    +'<div class="social-channel">'
+    +'<div class="social-ch-head">TikTok</div>'
+    +ttRows+secNote(ttSec)
+    +'</div>'
+    +'<div class="social-channel">'
+    +'<div class="social-ch-head">Facebook</div>'
+    +fbRows+secNote(fbSec)
+    +'</div>'
+    +'</div>'
+    +'</div>';
+}
+
+function buildAESocial(targetId){
+  if(!targetId)targetId='view-ae-social';
+  const NAV=[
+    {id:'overview', lbl:'Overview'},
+    {id:'ig',       lbl:'Instagram'},
+    {id:'tiktok',   lbl:'TikTok'},
+    {id:'fb',       lbl:'Facebook'},
+  ];
+  let navHtml='<div class="pulse-sub-nav">';
+  NAV.forEach(it=>{
+    const ac=it.id===activeAESocialSub?' psn-active':'';
+    navHtml+='<button class="psn-btn'+ac+'" onclick="selAESocialSub(\''+it.id+'\',this)">'+it.lbl+'</button>';
+  });
+  navHtml+='</div><div id="ae-social-sub-content"></div>';
+  document.getElementById(targetId).innerHTML='<div class="ae-social-container">'+navHtml+'</div>';
+  renderAESocialSub(activeAESocialSub);
+}
+
+// ── ATM PULSE (TEST) ─────────────────────────────────────────────────────────
+function selATMPulseSub(sub,el){
+  document.querySelectorAll('#view-atm-pulse .psn-btn').forEach(b=>b.classList.remove('psn-active'));
+  el.classList.add('psn-active');
+  activeATMPulseSub=sub;
+  renderATMPulseSub(sub);
+}
+
+function renderATMPulseSub(sub){
+  const el=document.getElementById('atm-pulse-sub-content');
+  if(!el)return;
+  if(sub==='overview'){el.innerHTML=buildATMPulseOverviewHTML();return;}
+  if(sub==='paid'){el.innerHTML='<div class="pulse-sub-wrap">'+buildPaidHTML('atm')+'</div>';return;}
+  if(sub==='social'){el.innerHTML='<div id="atm-social-in-pulse"></div>';buildATMSocial('atm-social-in-pulse');return;}
+  if(sub==='visit'){
+    const{html,trendSecId,trendLabel}=buildATMPulseSecHTML('visit',[['Visitors',false],['Ticket Revenue (SEK)',false],['YoY Visitor Growth %',false],['Occupancy %',false]]);
+    el.innerHTML=html;
+    if(trendSecId&&trendLabel)setTimeout(()=>drawLineChart('atm-psub-trend-visit','atm','visit',trendLabel,'#8c6a2f'),30);
+    return;
+  }
+  const CFG={
+    crm:{ov:[
+      ['Open Rate %',false],
+      ['CTR %',false],
+      ['CTOR %',false],
+      ['Unsubscribe Rate %',true],
+    ]},
+    ooh:{ov:[
+      ['Active Campaigns',false],
+      ['Total Reach',false],
+      ['Spend (SEK)',false],
+    ]},
+    events:{ov:[
+      ['Events Count',false],
+      ['Earned Reach',false],
+      ['Content Pieces',false],
+      ['Website Visits from Events',false],
+    ]},
+    search:{ov:[
+      ['Total Sessions',false],
+      ['Ticket Page Visits',false],
+      ['Web\u2192Ticket CVR %',false],
+      ['Search Clicks (GSC)',false],
+    ]},
+  };
+  const cfg=CFG[sub];
+  if(!cfg){el.innerHTML='<div class="pulse-sub-wrap"><p style="color:#9a8f84">Not found</p></div>';return;}
+  const{html,trendSecId,trendLabel}=buildATMPulseSecHTML(sub,cfg.ov);
+  el.innerHTML=html;
+  if(trendSecId&&trendLabel){
+    setTimeout(()=>drawLineChart('atm-psub-trend-'+trendSecId,'atm',trendSecId,trendLabel,'#8c6a2f'),30);
+  }
+}
+
+function buildATMPulseOverviewHTML(){
+  const atm=DATA.atm;
+
+  function getLatest(secId,label){
+    const s=atm.sections.find(x=>x.id===secId);
+    const m=s?s.metrics.find(x=>x.label===label):null;
+    if(!m)return{actual:null,target:null,fmt:'num'};
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    const actual=li>=0?m.actuals[li]:null;
+    const target=li>=0?m.targets[li]:(m.targets.find(v=>v!==null&&v!==undefined)||null);
+    return{actual,target,fmt:m.fmt};
+  }
+
+  // Business Output — VI for YTD (visitor actuals as proxy)
+  const visitSec=atm.sections.find(x=>x.id==='visit');
+  const visitMet=visitSec?visitSec.metrics.find(x=>x.label==='Visitors'):null;
+  const visTarget=visitMet?ytdTarget([16844,19227,21483],visitMet.targets,'num'):null;
+  const visActual=VI.atm.months.mar.visitors_ytd;
+  const revMet=visitSec?visitSec.metrics.find(x=>x.label==='Ticket Revenue (SEK)'):null;
+  const revTarget=revMet?ytdTarget([16844,19227,21483],revMet.targets,'sek'):null;
+  const revActual=VI.atm.months.mar.ticket_ytd;
+  const yoyYTD=VI.atm.months.mar.yoy_ytd;
+
+  const ticketPaid=getLatest('paid','Ticket Purchases from Paid');
+  const igReach=getLatest('ig','Reach');
+  const ttViews=getLatest('tiktok','Total Monthly Views');
+  const igEng=getLatest('ig','Engagement Rate % (by impressions)');
+  const newsOpen=getLatest('crm','Open Rate %');
+  const roasData=getLatest('paid','Blended ROAS');
+
+  function ragCl(a,t,lib){
+    if(a===null||a===undefined)return'rpt-na';
+    if(t===null||t===undefined)return'rpt-na';
+    const ratio=lib?(t/a):(a/t);
+    return ratio>=1?'vp':(ratio>=0.9?'vw':'vn');
+  }
+
+  function mkMet(name,valStr,valCl,barPct,ctxStr){
+    return'<div class="rpt-metric">'
+      +'<div class="rpt-met-name">'+he(name)+'</div>'
+      +'<div class="rpt-val-lg '+valCl+'">'+valStr+'</div>'
+      +'<div class="rpt-bar-wrap"><div class="rpt-bar" style="width:'+barPct.toFixed(1)+'%"></div></div>'
+      +'<div class="rpt-met-ctx">'+ctxStr+'</div>'
+      +'</div>';
+  }
+
+  function liveMet(d,name,lib){
+    const a=d.actual,t=d.target,f=d.fmt;
+    const cl=ragCl(a,t,lib);
+    const valStr=a!==null?fmt(a,f):'—';
+    const bp=(a!==null&&t!==null&&t!==0)?Math.min(100,lib?(t/a)*100:(a/t)*100):0;
+    let ctx='';
+    if(a!==null&&t!==null&&t!==0){
+      const p=lib?(t/a)*100:(a/t)*100;
+      const pcl=p>=100?'vp':(p>=90?'vw':'vn');
+      ctx='Mål '+fmt(t,f)+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
+    }else if(a===null)ctx='Inväntar data';
+    return mkMet(name,valStr,cl,bp,ctx);
+  }
+
+  function visMet(){
+    const a=visActual,t=visTarget;
+    const cl=ragCl(a,t,false);
+    const valStr=a!==null?fmt(a,'num'):'—';
+    const bp=(a!==null&&t!==null&&t!==0)?Math.min(100,(a/t)*100):0;
+    let ctx='';
+    if(a!==null&&t!==null){
+      const p=(a/t)*100;
+      const pcl=p>=100?'vp':(p>=90?'vw':'vn');
+      ctx='Mål '+fmt(t,'num')+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
+    }
+    if(yoyYTD!==null&&yoyYTD!==undefined){
+      const ycl=yoyYTD>=0?'vp':'vn';
+      ctx+=(ctx?' · ':'')+'YoY: <span class="'+ycl+'">'+(yoyYTD>=0?'+':'')+yoyYTD+'%</span>';
+    }
+    if(!ctx)ctx='Inväntar data';
+    return mkMet('Besökare YTD · jan–mar',valStr,cl,bp,ctx);
+  }
+
+  function revMetFn(){
+    const a=revActual,t=revTarget;
+    const cl=ragCl(a,t,false);
+    const valStr=a!==null?fmt(a,'sek'):'—';
+    const bp=(a!==null&&t!==null&&t!==0)?Math.min(100,(a/t)*100):0;
+    let ctx='';
+    if(a!==null&&t!==null&&t!==0){
+      const p=(a/t)*100;
+      const pcl=p>=100?'vp':(p>=90?'vw':'vn');
+      ctx='Mål '+fmt(t,'sek')+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
+    }else ctx='Inväntar data';
+    return mkMet('Intäkter YTD · jan–mar',valStr,cl,bp,ctx);
+  }
+
+  function roasMetFn(){
+    if(roasData.actual===null)return mkMet('Blended ROAS','—','rpt-na',0,'Startar april 2026');
+    return liveMet(roasData,'Blended ROAS',false);
+  }
+
+  function phMet(name,ctxStr){
+    return'<div class="rpt-metric">'
+      +'<div class="rpt-met-name">'+he(name)+'</div>'
+      +'<div class="rpt-val-ph">xx</div>'
+      +'<div class="rpt-bar-wrap"></div>'
+      +'<div class="rpt-met-ctx">'+he(ctxStr)+'</div>'
+      +'</div>';
+  }
+
+  const gaps=[];
+  atm.sections.forEach(sec=>{sec.metrics.forEach(m=>{if(m.is_gap)gaps.push({label:m.label,bench:(m.bench||'').replace(/^\u26a0\s*/,'')});});});
+  let gapsHtml='';
+  if(gaps.length){
+    gapsHtml='<hr class="pulse-sep"><div class="pulse-gaps-head">\u26a0 Tracking Gaps ('+gaps.length+')</div>';
+    gaps.forEach(g=>{gapsHtml+='<div class="pulse-gap-item"><span class="pulse-gap-name">'+g.label+'</span><span class="pulse-gap-bench">'+he(g.bench)+'</span></div>';});
+  }
+
+  return'<div class="pulse-wrap">'
+    +'<div class="ov-hdr">'
+    +'<span class="ov-hdr-title">ABBA The Museum — KPI Pulse</span>'
+    +'<span class="ov-hdr-date">Jan – Mar 2026 · uppdaterad mars 2026</span>'
+    +'</div>'
+    +'<hr class="ov-rule">'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">Business Output &amp; Paid Media</div>'
+    +'<div class="rpt-4col">'
+    +visMet()
+    +revMetFn()
+    +liveMet(ticketPaid,'Ticketköp via paid',false)
+    +roasMetFn()
+    +'</div></div>'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">Social — Räckvidd &amp; Engagemang</div>'
+    +'<div class="rpt-4col">'
+    +liveMet(igReach,'IG Räckvidd · senaste mån',false)
+    +liveMet(ttViews,'TikTok visningar · senaste mån',false)
+    +liveMet(igEng,'IG engagemangsgrad · senaste mån',false)
+    +liveMet(newsOpen,'Nyhetsbrev öppningsgrad · senaste mån',false)
+    +'</div></div>'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">OOH / DOOH</div>'
+    +'<div class="rpt-pair">'
+    +phMet('Räckvidd','Mål sätt mål · ej satt')
+    +phMet('Share of Voice','Mål sätt mål · ej satt')
+    +'</div></div>'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">Events &amp; PR</div>'
+    +'<div class="rpt-pair">'
+    +phMet('Earned Reach','')
+    +phMet('Events Count','')
+    +'</div></div>'
+
+    +'<div class="rpt-section">'
+    +'<div class="rpt-sec-lbl2">Search &amp; Website</div>'
+    +'<div class="rpt-pair">'
+    +phMet('Web \u2192 Ticket CVR','')
+    +phMet('Search Clicks','')
+    +'</div></div>'
+
+    +gapsHtml
+    +'</div>';
+}
+
+function buildATMPulseSecHTML(secId,overviewLabels){
+  const atm=DATA.atm;
+  const sec=atm.sections.find(s=>s.id===secId);
+  if(!sec)return{html:'<div class="pulse-sub-wrap"><p style="color:#9a8f84;padding:20px">Section not found</p></div>',trendSecId:null,trendLabel:null};
+
+  function latestOf(m){
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    return{actual:li>=0?m.actuals[li]:null,target:li>=0?m.targets[li]:(m.targets.find(v=>v!==null&&v!==undefined)||null)};
+  }
+  function ragPill(a,t,lib){
+    if(a===null||t===null)return'<span class="pill p-e">\u2014</span>';
+    const p=lib?(t/a)*100:(a/t)*100;
+    if(p>=100)return'<span class="pill p-g">On Track</span>';
+    if(p>=90)return'<span class="pill p-y">At Risk</span>';
+    return'<span class="pill p-r">Off Track</span>';
+  }
+  function ragCl(a,t,lib){if(a===null||t===null)return'';const p=lib?(t/a)*100:(a/t)*100;return p>=100?'vp':(p>=90?'vw':'vn');}
+  function pctStr(a,t,lib){if(a===null||t===null)return'\u2014';const p=lib?(t/a)*100:(a/t)*100;return'<span class="'+ragCl(a,t,lib)+'">'+p.toFixed(0)+'%</span>';}
+
+  const cols=Math.min(overviewLabels.length,4);
+  let overHtml='<div class="vis-section-lbl">Overview</div>'
+    +'<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:10px;margin-bottom:4px">';
+  overviewLabels.forEach(([lbl,lib])=>{
+    const m=sec.metrics.find(x=>x.label===lbl&&!x.is_divider);
+    if(!m){overHtml+='';return;}
+    const{actual,target}=latestOf(m);
+    const cl=ragCl(actual,target,lib);
+    overHtml+='<div class="vis-stat">'
+      +'<div class="vis-stat-lbl">'+he(lbl)+'</div>'
+      +'<div class="vis-stat-val '+cl+'">'+( actual!==null?fmt(actual,m.fmt):'<span class="psub-await">Awaiting data</span>')+'</div>'
+      +'<div class="vis-stat-sub">Target: '+(target!==null?fmt(target,m.fmt):'\u2014')+'</div>'
+      +'</div>';
+  });
+  overHtml+='</div>';
+
+  const trendMet=sec.metrics.find(m=>!m.is_divider&&m.actuals.some(v=>v!==null&&v!==undefined&&v!==0));
+  let trendHtml='<div class="vis-section-lbl">Trend</div>';
+  if(trendMet){
+    trendHtml+='<div class="vis-chart-box"><canvas id="atm-psub-trend-'+secId+'" height="180"></canvas></div>';
+  }else{
+    trendHtml+='<div class="psub-no-data">Trend data available from Apr 2026</div>';
+  }
+
+  let breakHtml='<div class="vis-section-lbl">All Metrics</div>'
+    +'<div class="psub-breakdown">'
+    +'<div class="psub-header-row">'
+    +'<span class="psub-col-name">Metric</span>'
+    +'<span class="psub-col-num">Actual</span>'
+    +'<span class="psub-col-num">Target</span>'
+    +'<span class="psub-col-sm">vs Tgt</span>'
+    +'<span class="psub-col-st">Status</span>'
+    +'</div>';
+  sec.metrics.forEach(m=>{
+    if(m.is_divider)return;
+    const lib=m.lower_is_better||false;
+    const{actual,target}=latestOf(m);
+    const gapStyle=m.is_gap?'background:#fff5ee':'';
+    breakHtml+='<div class="psub-row" style="'+gapStyle+'">'
+      +'<div class="psub-row-main">'
+      +'<span class="psub-name">'+he(m.label)+'</span>'
+      +'<span class="psub-col-num psub-actual">'+(actual!==null?fmt(actual,m.fmt):'<span class="psub-await">Awaiting data</span>')+'</span>'
+      +'<span class="psub-col-num psub-target">'+(target!==null?fmt(target,m.fmt):'\u2014')+'</span>'
+      +'<span class="psub-col-sm">'+pctStr(actual,target,lib)+'</span>'
+      +'<span class="psub-col-st">'+ragPill(actual,target,lib)+'</span>'
+      +'</div>'
+      +(m.bench?'<div class="psub-bench">'+he(m.bench.replace(/^\u26a0\s*/,''))+'</div>':'')
+      +'</div>';
+  });
+  breakHtml+='</div>';
+
+  let noteHtml='';
+  if(sec.note){noteHtml='<div class="social-insight" style="margin-top:12px">'+he(sec.note)+'</div>';}
+
+  return{html:'<div class="pulse-sub-wrap">'+overHtml+trendHtml+breakHtml+noteHtml+'</div>',
+    trendSecId:trendMet?secId:null,trendLabel:trendMet?trendMet.label:null};
+}
+
+function buildATMPulse(){
+  const NAV=[
+    {id:'overview', lbl:'Overview'},
+    {id:'visit',    lbl:'Visitation & Revenue'},
+    {id:'social',   lbl:'Social'},
+    {id:'paid',     lbl:'Paid Media'},
+    {id:'crm',      lbl:'Newsletter & CRM'},
+    {id:'ooh',      lbl:'OOH / DOOH'},
+    {id:'events',   lbl:'Events & PR'},
+    {id:'search',   lbl:'Search & Website'},
+  ];
+  if(['ig','tiktok','fb'].includes(activeATMPulseSub))activeATMPulseSub='overview';
+  let navHtml='<div class="pulse-sub-nav">';
+  NAV.forEach(it=>{
+    const ac=it.id===activeATMPulseSub?' psn-active':'';
+    navHtml+='<button class="psn-btn'+ac+'" onclick="selATMPulseSub(\''+it.id+'\',this)">'+it.lbl+'</button>';
+  });
+  navHtml+='</div><div id="atm-pulse-sub-content"></div>';
+  document.getElementById('view-atm-pulse').innerHTML=navHtml;
+  renderATMPulseSub(activeATMPulseSub);
+}
+
+// ── ATM SOCIAL (TEST) ────────────────────────────────────────────────────────
+function selATMSocialSub(sub,el){
+  document.querySelectorAll('.atm-social-container .psn-btn').forEach(b=>b.classList.remove('psn-active'));
+  el.classList.add('psn-active');
+  activeATMSocialSub=sub;
+  renderATMSocialSub(sub);
+}
+
+function renderATMSocialSub(sub){
+  const el=document.getElementById('atm-social-sub-content');
+  if(!el)return;
+  if(sub==='overview'){
+    el.innerHTML=buildATMSocialOverviewHTML();
+    setTimeout(()=>{
+      drawLineChart('socatm-ig-reach','atm','ig','Reach','#8c6a2f');
+      drawLineChart('socatm-tt-views','atm','tiktok','Views per Video','#8c6a2f');
+      drawLineChart('socatm-fb-reach','atm','fb','Reach','#8c6a2f');
+    },30);
+    return;
+  }
+  const SOC_CFG={
+    ig:{ov:[['Reach',false],['Engagement Rate % (by impressions)',false],['Follower Growth',false],['Link Clicks',false]]},
+    tiktok:{ov:[['Views per Video',false],['Engagement Rate %',false],['Total Monthly Views',false],['New Followers per Video',false]]},
+    fb:{ov:[['Reach',false],['Engagement Rate %',false],['Follower Growth',false],['Link Clicks',false]]},
+  };
+  const cfg=SOC_CFG[sub];
+  if(!cfg){el.innerHTML='<div class="pulse-sub-wrap"><p style="color:#9a8f84;padding:20px">Not found</p></div>';return;}
+  const{html,trendSecId,trendLabel}=buildATMPulseSecHTML(sub,cfg.ov);
+  el.innerHTML=html;
+  if(trendSecId&&trendLabel){
+    setTimeout(()=>drawLineChart('atm-psub-trend-'+trendSecId,'atm',trendSecId,trendLabel,'#8c6a2f'),30);
+  }
+}
+
+function buildATMSocialOverviewHTML(){
+  const atm=DATA.atm;
+  const igSec=atm.sections.find(s=>s.id==='ig');
+  const ttSec=atm.sections.find(s=>s.id==='tiktok');
+  const fbSec=atm.sections.find(s=>s.id==='fb');
+
+  function latest(sec,label){
+    if(!sec)return{a:null,t:null,fmt:'num'};
+    const m=sec.metrics.find(x=>x.label===label);
+    if(!m)return{a:null,t:null,fmt:'num'};
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    return{a:li>=0?m.actuals[li]:null,t:li>=0?m.targets[li]:null,fmt:m.fmt};
+  }
+  function ragCl(a,t,lib){
+    if(a===null||t===null)return'';
+    const p=lib?(t/a)*100:(a/t)*100;
+    return p>=100?'vp':(p>=90?'vw':'vn');
+  }
+  function fmtOrDash(a,f){return a!==null?fmt(a,f):'\u2014';}
+
+  const overKPIs=[
+    {lbl:'IG Reach',           ...latest(igSec,'Reach')},
+    {lbl:'IG Engagement Rate', ...latest(igSec,'Engagement Rate % (by impressions)')},
+    {lbl:'TikTok Views/Video', ...latest(ttSec,'Views per Video')},
+    {lbl:'FB Reach',           ...latest(fbSec,'Reach')},
+    {lbl:'FB Engagement Rate', ...latest(fbSec,'Engagement Rate %')},
+  ];
+  let overHtml='';
+  overKPIs.forEach(k=>{
+    const cl=ragCl(k.a,k.t,false);
+    overHtml+='<div class="vis-stat">'
+      +'<div class="vis-stat-lbl">'+k.lbl+'</div>'
+      +'<div class="vis-stat-val '+cl+'">'+fmtOrDash(k.a,k.fmt)+'</div>'
+      +'<div class="vis-stat-sub">Target: '+fmtOrDash(k.t,k.fmt)+'</div>'
+      +'</div>';
+  });
+
+  function chRows(sec,metrics){
+    if(!sec)return'<div style="color:#9a8f84;font-size:10px;padding:8px 0">No data available</div>';
+    let h='';
+    metrics.forEach(item=>{
+      if(typeof item==='string'){
+        h+='<div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7a6e60;padding:6px 0 3px;margin-top:6px;border-top:1px solid #e4ddd2">'+item+'</div>';
+        return;
+      }
+      const[lbl,lib,isGap]=item;
+      const m=sec.metrics.find(x=>x.label===lbl);
+      if(!m||m.is_divider)return;
+      let li=-1;
+      m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+      const a=li>=0?m.actuals[li]:null;
+      const t=li>=0?m.targets[li]:null;
+      const cl=ragCl(a,t,lib||false);
+      const bg=isGap?'background:#fff5ee;':'';
+      h+='<div class="social-kpi-row" style="'+bg+'">'
+        +'<span class="social-kpi-name">'+lbl+(isGap?' \u26a0':'')+'</span>'
+        +'<span class="social-kpi-val '+cl+'">'+fmtOrDash(a,m.fmt)+'</span>'
+        +'</div>';
+    });
+    return h;
+  }
+
+  function secNote(sec){
+    if(!sec||!sec.note)return'';
+    return'<div class="social-insight">'+sec.note+'</div>';
+  }
+
+  const igRows=chRows(igSec,[
+    ['Total Followers',false],['Follower Growth',false],['Reach',false],['Impressions',false],
+    'MID FUNNEL',
+    ['Profile Visits',false],['Link Clicks',false],['Link CTR %',false],
+    ['Engagement Rate % (by impressions)',false],['Content Interactions',false],
+    'BOTTOM FUNNEL',
+    ['Website Visits from IG',false,true],['Social \u2192 Ticket CVR %',false,true],
+    ['Ticket Purchases from Social',false,true],
+  ]);
+  const ttRows=chRows(ttSec,[
+    ['Views per Video',false],['Total Monthly Views',false],['Total Watch Time (hours)',false],
+    ['Avg Watch Time (sec)',false],['Completion Rate %',false],
+    'MID FUNNEL',
+    ['Engagement Rate %',false],['Likes',false],['Comments',false],['Shares',false],
+    ['Saves',false],['Save Rate %',false],['New Followers per Video',false],
+    ['For You % (FYP traffic)',false],['Search Traffic %',false],['Profile Traffic %',false],
+    'BOTTOM FUNNEL',
+    ['Website Visits from TikTok',false,true],['TikTok \u2192 Ticket CVR %',false,true],
+  ]);
+  const fbRows=chRows(fbSec,[
+    ['Total Followers',false],['Follower Growth',false],['Reach',false],['Impressions',false],
+    ['Link Clicks',false],['Page Visits',false],['Content Interactions',false],
+    ['Engagement Rate %',false],
+  ]);
+
+  return'<div class="social-wrap">'
+    +'<div class="social-header">'
+    +'<span class="social-title" style="color:#8c6a2f">ABBA The Museum \u2014 Social</span>'
+    +'<span class="bp bp-atm">ATM</span>'
+    +'<span class="social-sub">\u00b7 Last updated: March 2026 \u00b7 YTD: Jan\u2013Mar</span>'
+    +'</div>'
+    +'<div class="vis-section-lbl">Overview \u2014 Latest Month Actuals vs Target</div>'
+    +'<div class="social-overview-grid">'+overHtml+'</div>'
+    +'<div class="vis-section-lbl">Trends (Jan\u2013Dec 2026)</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:4px">'
+    +'<div class="vis-chart-box"><canvas id="socatm-ig-reach" height="200"></canvas></div>'
+    +'<div class="vis-chart-box"><canvas id="socatm-tt-views" height="200"></canvas></div>'
+    +'<div class="vis-chart-box"><canvas id="socatm-fb-reach" height="200"></canvas></div>'
+    +'</div>'
+    +'<p style="font-size:9px;color:#9a8f84;font-style:italic;margin-bottom:16px">'
+    +'Solid line = monthly actuals \u00a0\u00b7\u00a0 Dashed = monthly target</p>'
+    +'<div class="vis-section-lbl">Channel Breakdown \u2014 March 2026</div>'
+    +'<div class="social-channels">'
+    +'<div class="social-channel"><div class="social-ch-head">Instagram</div>'+igRows+secNote(igSec)+'</div>'
+    +'<div class="social-channel"><div class="social-ch-head">TikTok</div>'+ttRows+secNote(ttSec)+'</div>'
+    +'<div class="social-channel"><div class="social-ch-head">Facebook</div>'+fbRows+secNote(fbSec)+'</div>'
+    +'</div>'
+    +'</div>';
+}
+
+function buildATMSocial(targetId){
+  if(!targetId)targetId='view-atm-social';
+  const NAV=[
+    {id:'overview', lbl:'Overview'},
+    {id:'ig',       lbl:'Instagram'},
+    {id:'tiktok',   lbl:'TikTok'},
+    {id:'fb',       lbl:'Facebook'},
+  ];
+  let navHtml='<div class="pulse-sub-nav">';
+  NAV.forEach(it=>{
+    const ac=it.id===activeATMSocialSub?' psn-active':'';
+    navHtml+='<button class="psn-btn'+ac+'" onclick="selATMSocialSub(\''+it.id+'\',this)">'+it.lbl+'</button>';
+  });
+  navHtml+='</div><div id="atm-social-sub-content"></div>';
+  document.getElementById(targetId).innerHTML='<div class="atm-social-container">'+navHtml+'</div>';
+  renderATMSocialSub(activeATMSocialSub);
+}
+
+
+// ── AE PAID PULSE OVERVIEW ────────────────────────────────────────────
+function buildAEPaidPulseHTML(){
+  const d=DATA.ae;
+  const sec=d.sections.find(s=>s.id==='paid');
+  if(!sec)return'<p style="color:#9a8f84;padding:20px">Paid section not found</p>';
+
+  function getMet(lbl){return sec.metrics.find(m=>m.label===lbl)||null;}
+
+  function curActual(m){
+    if(!m)return null;
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    return li>=0?m.actuals[li]:null;
+  }
+
+  function bestTarget(m){
+    if(!m)return null;
+    return m.targets.find(v=>v!==null&&v!==undefined&&v!==0)||null;
+  }
+
+  function parseBT(bench){
+    const r={min:'—',stretch:'—'};
+    if(!bench)return r;
+    bench.split('·').map(s=>s.trim()).forEach(s=>{
+      if(/^Min:/i.test(s))r.min=s.replace(/^Min:\s*/i,'');
+      if(/^Stretch:/i.test(s))r.stretch=s.replace(/^Stretch:\s*/i,'');
+    });
+    return r;
+  }
+
+  function parseMinNum(bench){
+    if(!bench)return null;
+    for(const s of bench.split('·').map(s=>s.trim())){
+      if(/^Min:/i.test(s)){
+        const m=s.replace(/,/g,'').match(/(\d+\.?\d*)/);
+        return m?parseFloat(m[1]):null;
+      }
+    }
+    return null;
+  }
+
+  function kpiSt(actual,target,minVal,lib){
+    if(actual===null)return{cl:'p-e',label:'Starts Apr'};
+    if(target===null)return{cl:'p-e',label:'No target'};
+    const on=lib?actual<=target:actual>=target;
+    if(on)return{cl:'p-g',label:'On Target'};
+    if(minVal!==null){
+      const ok=lib?actual<=minVal:actual>=minVal;
+      if(ok)return{cl:'p-y',label:'At Risk'};
+      return{cl:'p-r',label:'Below Min'};
+    }
+    const p=lib?(target/actual)*100:(actual/target)*100;
+    return p>=85?{cl:'p-y',label:'At Risk'}:{cl:'p-r',label:'Off Track'};
+  }
+
+  // ── SECTION 1: KPI FOCUS TABLE ──
+  const KPIF=[
+    {label:'ROAS (Total)',          met:'Blended ROAS',
+     minTxt:'8×',  minVal:8,  tgtTxt:'12×', strTxt:'20×+', lib:false},
+    {label:'CPA — Cost per ticket', met:'CPA — Cost per Ticket (SEK)',
+     minTxt:'≤50 kr',minVal:50, tgtTxt:'≤35 kr', strTxt:'≤20 kr', lib:true},
+    {label:'Ticket Volume / month', met:'Ticket Purchases from Paid',
+     minTxt:'350',       minVal:350, tgtTxt:'480',   strTxt:'600+',  lib:false},
+  ];
+
+  let focusRows='';
+  KPIF.forEach(k=>{
+    const m=getMet(k.met);
+    const actual=curActual(m);
+    const target=m?bestTarget(m):null;
+    const st=kpiSt(actual,target,k.minVal,k.lib);
+    const curDisp=actual!==null
+      ?'<strong>'+fmt(actual,m.fmt)+'</strong>'
+      :'<span style="color:#bbb6aa">Starts Apr</span>';
+    focusRows+='<tr>'
+      +'<td>'+he(k.label)+'</td>'
+      +'<td class="kpif-min-c">'+he(k.minTxt)+'</td>'
+      +'<td class="kpif-tgt-c">'+he(k.tgtTxt)+'</td>'
+      +'<td class="kpif-str-c">'+he(k.strTxt)+'</td>'
+      +'<td class="kpif-cur">'+curDisp+'</td>'
+      +'<td class="kpif-st"><span class="pill '+st.cl+'">'+st.label+'</span></td>'
+      +'</tr>';
+  });
+
+  const focusHtml='<div class="kpif-wrap">'
+    +'<div class="kpif-title">KPI Focus — Paid Media (Beet)</div>'
+    +'<div class="kpif-sub">Avicii Experience · Monthly reporting</div>'
+    +'<div class="kpif-tbl-wrap"><table class="kpif-table">'
+    +'<thead><tr>'
+    +'<th>KPI</th>'
+    +'<th class="kpif-num">Minimum</th>'
+    +'<th class="kpif-num">Target</th>'
+    +'<th class="kpif-num">Stretch</th>'
+    +'<th class="kpif-num">Current</th>'
+    +'<th class="kpif-num">Status</th>'
+    +'</tr></thead>'
+    +'<tbody>'+focusRows+'</tbody>'
+    +'<tfoot class="kpif-footer"><tr>'
+    +'<td colspan="6">Minimum = floor. Below this = action required. · '
+    +'Target = expected monthly delivery. · '
+    +'Stretch = peak ambition based on TAS 2025.</td>'
+    +'</tr></tfoot>'
+    +'</table></div>'
+    +'</div>';
+
+  // ── SECTION 2: MONTHLY TREND TABLE ──
+  const MTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const TREND=[
+    {label:'ROAS (Total)',               met:'Blended ROAS',                  lib:false},
+    {label:'CPA – Cost per ticket', met:'CPA — Cost per Ticket (SEK)',lib:true},
+    {label:'Ticket Purchases / mo',      met:'Ticket Purchases from Paid',     lib:false},
+  ];
+
+  function mthBg(actual,target,lib){
+    if(actual===null||actual===undefined)return'#f0ede8';
+    if(target===null||target===undefined)return'#f0ede8';
+    const ratio=lib?(target/actual):(actual/target);
+    if(ratio>=1.0)return'#dcfce7';
+    if(ratio>=0.9)return'#fef9c3';
+    return'#fee2e2';
+  }
+
+  let trendRows='';
+  TREND.forEach(r=>{
+    const m=getMet(r.met);
+    trendRows+='<tr><td class="kpif-mth-kpi">'+he(r.label)+'</td>';
+    MTHS.forEach((_,i)=>{
+      const actual=m?(m.actuals[i]!==undefined?m.actuals[i]:null):null;
+      const target=m?(m.targets[i]!==undefined?m.targets[i]:null):null;
+      const bg=mthBg(actual,target,r.lib);
+      const hasA=actual!==null&&actual!==undefined;
+      const hasTgt=target!==null&&target!==undefined;
+      trendRows+='<td class="kpif-mth-cell" style="background:'+bg+'">';
+      if(hasA)trendRows+='<div class="kpif-mth-act">'+fmt(actual,m.fmt)+'</div>';
+      if(hasTgt)trendRows+='<div class="kpif-mth-tgt">'+fmt(target,m.fmt)+'</div>';
+      trendRows+='</td>';
+    });
+    trendRows+='</tr>';
+  });
+
+  const trendHtml='<div class="kpif-wrap" style="margin-top:4px">'
+    +'<div class="kpif-title">Monthly Performance — Jan–Dec 2026</div>'
+    +'<div class="kpif-sub">Green = on/above target · Amber = within 10% below · Red = &gt;10% below · Grey = no data yet</div>'
+    +'<div class="kpif-tbl-wrap kpif-mth-wrap"><table class="kpif-table kpif-mth-tbl">'
+    +'<thead><tr><th class="kpif-mth-kpi-h">KPI</th>'
+    +MTHS.map(m=>'<th class="kpif-mth-h">'+m+'</th>').join('')
+    +'</tr></thead>'
+    +'<tbody>'+trendRows+'</tbody>'
+    +'</table></div>'
+    +'</div>';
+
+  // ── SECTION 3: CHANNEL GROUPS ──
+  const GROUPS=[
+    {lbl:'Conversion & Revenue',mets:['Blended ROAS','CPA — Cost per Ticket (SEK)','Ticket Purchases from Paid','Revenue from Paid Ads (SEK)'],cols:4,bars:true},
+    {lbl:'Google Search',mets:['Google Search CTR %','Google Search CPC (SEK)'],cols:2},
+    {lbl:'Meta',mets:['Meta CTR %','Meta CPM (SEK)'],cols:2},
+    {lbl:'TikTok',mets:['TikTok CPM (SEK)','TikTok CTR %','TikTok CPC (SEK)'],cols:3},
+    {lbl:'Spend',mets:['Media Spend (SEK)'],cols:1},
+  ];
+
+  let grpH='';
+  GROUPS.forEach(({lbl,mets,cols,bars})=>{
+    grpH+='<div class="paid-section-lbl">'+he(lbl)+'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:10px;margin-bottom:16px">';
+    mets.forEach(ml=>{
+      const m=getMet(ml);
+      if(!m){
+        grpH+='<div class="paid-card" style="opacity:.4"><div class="paid-card-lbl">'+he(ml)+'</div><div class="paid-card-val pc-na">Not tracked</div></div>';
+        return;
+      }
+      const actual=curActual(m);
+      const target=bestTarget(m);
+      const lib=m.lower_is_better||false;
+      const minVal=parseMinNum(m.bench);
+      const st=kpiSt(actual,target,minVal,lib);
+      const bt=parseBT(m.bench||'');
+      const hasA=actual!==null;
+      let barH='';
+      if(bars&&hasA&&target!==null){
+        const pct=Math.min(100,lib?(target/actual)*100:(actual/target)*100);
+        const bc=st.cl==='p-g'?'#22c55e':(st.cl==='p-y'?'#eab308':'#ef4444');
+        barH='<div style="margin-top:8px;height:4px;background:#ece8e1;border-radius:2px"><div style="width:'+pct.toFixed(0)+'%;height:4px;background:'+bc+';border-radius:2px"></div></div>';
+      }
+      grpH+='<div class="paid-card">'
+        +'<div class="paid-card-lbl">'+he(m.label)+'</div>'
+        +'<div class="paid-card-val'+(hasA?'':' pc-na')+'">'+(hasA?fmt(actual,m.fmt):'Starts Apr')+'</div>'
+        +'<div class="paid-card-thr">'
+        +(bt.min!=='—'?'<span class="pthr-min">Min '+he(bt.min)+'</span>':'')
+        +(target!==null?'<span class="pthr-tgt">Tgt '+fmt(target,m.fmt)+'</span>':'')
+        +(bt.stretch!=='—'?'<span class="pthr-str">↑ '+he(bt.stretch)+'</span>':'')
+        +'</div>'
+        +(hasA?'<div class="paid-card-pill"><span class="pill '+st.cl+'">'+st.label+'</span></div>':'')
+        +barH
+        +'</div>';
+    });
+    grpH+='</div>';
+  });
+
+  return'<div style="padding:0 0 12px">'+focusHtml+trendHtml+grpH+'</div>';
+}
+
+function init(){
+  buildCards('cards-atm','atm');
+  buildCards('cards-ae','ae');
+  buildTables('tables-atm','atm');
+  buildTables('tables-ae','ae');
+  buildATMPulse();
+}
+init();
+</script>
+</body>
+</html>
