@@ -274,12 +274,48 @@ tr.gap-row td.td-m{color:#c05a20;background:#fff5ee!important}
 .rpt-val-ph{font-size:30px;font-weight:700;color:#ddd6c8;letter-spacing:-.03em;line-height:1;margin-bottom:5px}
 .rpt-met-name{font-size:9px;font-weight:600;color:#9a8f84;margin-bottom:6px;letter-spacing:.02em}
 .rpt-met-ctx{font-size:10px;color:#9a8f84;margin-top:7px;line-height:1.5}
+#pw-overlay{position:fixed;inset:0;background:#f4efe6;z-index:9999;display:flex;align-items:center;justify-content:center}
+#pw-card{background:#fff;border:1px solid #ddd6c8;border-radius:8px;padding:40px 44px;width:100%;max-width:380px;box-shadow:0 2px 16px rgba(0,0,0,.08);text-align:center}
+#pw-card h1{font-size:18px;font-weight:700;color:#111;letter-spacing:-0.02em;margin-bottom:6px}
+#pw-card p{font-size:11px;color:#7a7068;margin-bottom:28px}
+#pw-input{width:100%;padding:10px 14px;border:1px solid #ddd6c8;border-radius:5px;background:#faf6ef;font-size:13px;font-family:inherit;color:#1a1a1a;outline:none;margin-bottom:10px}
+#pw-input:focus{border-color:#8c6a2f}
+#pw-btn{width:100%;padding:10px;background:#1a1a1a;color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;letter-spacing:.02em}
+#pw-btn:hover{background:#333}
+#pw-err{font-size:11px;color:#b83232;margin-top:10px;min-height:16px}
 </style>
 </head>
 <body>
+<div id="pw-overlay">
+  <div id="pw-card">
+    <h1>KPI Dashboard 2026</h1>
+    <p>ABBA The Museum &amp; Avicii Experience</p>
+    <input id="pw-input" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')pwCheck()">
+    <button id="pw-btn" onclick="pwCheck()">Enter</button>
+    <div id="pw-err"></div>
+  </div>
+</div>
+<script>
+(function(){
+  if(sessionStorage.getItem('kpi_auth')==='1'){
+    document.getElementById('pw-overlay').style.display='none';
+  }
+})();
+function pwCheck(){
+  const v=document.getElementById('pw-input').value;
+  if(v==='Pophouse2026'){
+    sessionStorage.setItem('kpi_auth','1');
+    document.getElementById('pw-overlay').style.display='none';
+  } else {
+    document.getElementById('pw-err').textContent='Incorrect password';
+    document.getElementById('pw-input').value='';
+    document.getElementById('pw-input').focus();
+  }
+}
+</script>
 <div class="top-bar"><h1>KPI Dashboard 2026</h1><div class="top-meta">ABBA The Museum &amp; Avicii Experience &nbsp;·&nbsp; Jan–Dec 2026 &nbsp;·&nbsp; Last updated: March 2026 &nbsp;·&nbsp; YTD: Jan–Mar</div></div>
 <div class="brand-tabs">
-  <button class="brand-tab active-atm" onclick="sw('visitors',this)">Visitors</button>
+  <button class="brand-tab active-tr" onclick="sw('visitors',this)">Visitors</button>
   <button class="brand-tab" onclick="sw('atm-pulse',this)">ABBA The Museum 2026</button>
   <button class="brand-tab" onclick="sw('ae-pulse',this)">Avicii Experience 2026</button>
 </div>
@@ -2519,7 +2555,7 @@ function renderATMPulseSub(sub){
   const el=document.getElementById('atm-pulse-sub-content');
   if(!el)return;
   if(sub==='overview'){el.innerHTML=buildATMPulseOverviewHTML();return;}
-  if(sub==='paid'){el.innerHTML='<div class="pulse-sub-wrap">'+buildPaidHTML('atm')+'</div>';return;}
+  if(sub==='paid'){el.innerHTML='<div class="pulse-sub-wrap">'+buildATMPaidPulseHTML()+'</div>';return;}
   if(sub==='social'){el.innerHTML='<div id="atm-social-in-pulse"></div>';buildATMSocial('atm-social-in-pulse');return;}
   if(sub==='visit'){
     const{html,trendSecId,trendLabel}=buildATMPulseSecHTML('visit',[['Visitors',false],['Ticket Revenue (SEK)',false],['YoY Visitor Growth %',false],['Occupancy %',false]]);
@@ -2999,6 +3035,206 @@ function buildATMSocial(targetId){
 
 
 // ── AE PAID PULSE OVERVIEW ────────────────────────────────────────────
+function buildATMPaidPulseHTML(){
+  const d=DATA.atm;
+  const sec=d.sections.find(s=>s.id==='paid');
+  if(!sec)return'<p style="color:#9a8f84;padding:20px">Paid section not found</p>';
+
+  function getMet(lbl){return sec.metrics.find(m=>m.label===lbl)||null;}
+
+  function curActual(m){
+    if(!m)return null;
+    let li=-1;
+    m.actuals.forEach((v,i)=>{if(v!==null&&v!==undefined)li=i;});
+    return li>=0?m.actuals[li]:null;
+  }
+
+  function bestTarget(m){
+    if(!m)return null;
+    return m.targets.find(v=>v!==null&&v!==undefined&&v!==0)||null;
+  }
+
+  function parseBT(bench){
+    const r={min:'—',stretch:'—'};
+    if(!bench)return r;
+    bench.split('·').map(s=>s.trim()).forEach(s=>{
+      if(/^Min:/i.test(s))r.min=s.replace(/^Min:\s*/i,'');
+      if(/^Stretch:/i.test(s))r.stretch=s.replace(/^Stretch:\s*/i,'');
+    });
+    return r;
+  }
+
+  function parseMinNum(bench){
+    if(!bench)return null;
+    for(const s of bench.split('·').map(s=>s.trim())){
+      if(/^Min:/i.test(s)){
+        const m=s.replace(/,/g,'').match(/(\d+\.?\d*)/);
+        return m?parseFloat(m[1]):null;
+      }
+    }
+    return null;
+  }
+
+  function kpiSt(actual,target,minVal,lib){
+    if(actual===null)return{cl:'p-e',label:'Starts Apr'};
+    if(target===null)return{cl:'p-e',label:'No target'};
+    const on=lib?actual<=target:actual>=target;
+    if(on)return{cl:'p-g',label:'On Target'};
+    if(minVal!==null){
+      const ok=lib?actual<=minVal:actual>=minVal;
+      if(ok)return{cl:'p-y',label:'At Risk'};
+      return{cl:'p-r',label:'Below Min'};
+    }
+    const p=lib?(target/actual)*100:(actual/target)*100;
+    return p>=85?{cl:'p-y',label:'At Risk'}:{cl:'p-r',label:'Off Track'};
+  }
+
+  // ── SECTION 1: KPI FOCUS TABLE ──
+  const KPIF=[
+    {label:'ROAS (Total)',          met:'Blended ROAS',
+     minTxt:'15×',  minVal:15,  tgtTxt:'30×', strTxt:'60×+', lib:false},
+    {label:'CPA — Cost per ticket', met:'CPA — Cost per Ticket (SEK)',
+     minTxt:'≤20 kr',minVal:20, tgtTxt:'≤14 kr', strTxt:'≤8 kr', lib:true},
+    {label:'Ticket Volume / month', met:'Ticket Purchases from Paid',
+     minTxt:'1,000',    minVal:1000, tgtTxt:'2,000',  strTxt:'3,200+', lib:false},
+  ];
+
+  let focusRows='';
+  KPIF.forEach(k=>{
+    const m=getMet(k.met);
+    const actual=curActual(m);
+    const target=m?bestTarget(m):null;
+    const st=kpiSt(actual,target,k.minVal,k.lib);
+    const curDisp=actual!==null
+      ?'<strong>'+fmt(actual,m.fmt)+'</strong>'
+      :'<span style="color:#bbb6aa">Starts Apr</span>';
+    focusRows+='<tr>'
+      +'<td>'+he(k.label)+'</td>'
+      +'<td class="kpif-min-c">'+he(k.minTxt)+'</td>'
+      +'<td class="kpif-tgt-c">'+he(k.tgtTxt)+'</td>'
+      +'<td class="kpif-str-c">'+he(k.strTxt)+'</td>'
+      +'<td class="kpif-cur">'+curDisp+'</td>'
+      +'<td class="kpif-st"><span class="pill '+st.cl+'">'+st.label+'</span></td>'
+      +'</tr>';
+  });
+
+  const focusHtml='<div class="kpif-wrap">'
+    +'<div class="kpif-title">KPI Focus — Paid Media (Beet)</div>'
+    +'<div class="kpif-sub">ABBA The Museum · Monthly reporting</div>'
+    +'<div class="kpif-tbl-wrap"><table class="kpif-table">'
+    +'<thead><tr>'
+    +'<th>KPI</th>'
+    +'<th class="kpif-num">Minimum</th>'
+    +'<th class="kpif-num">Target</th>'
+    +'<th class="kpif-num">Stretch</th>'
+    +'<th class="kpif-num">Current</th>'
+    +'<th class="kpif-num">Status</th>'
+    +'</tr></thead>'
+    +'<tbody>'+focusRows+'</tbody>'
+    +'<tfoot class="kpif-footer"><tr>'
+    +'<td colspan="6">Minimum = floor. Below this = action required. · '
+    +'Target = expected monthly delivery. · '
+    +'Stretch = peak ambition based on TAS 2025.</td>'
+    +'</tr></tfoot>'
+    +'</table></div>'
+    +'</div>';
+
+  // ── SECTION 2: MONTHLY TREND TABLE ──
+  const MTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const TREND=[
+    {label:'ROAS (Total)',          met:'Blended ROAS',                lib:false},
+    {label:'CPA – Cost per ticket', met:'CPA — Cost per Ticket (SEK)',lib:true},
+    {label:'Ticket Purchases / mo', met:'Ticket Purchases from Paid',  lib:false},
+  ];
+
+  function mthBg(actual,target,lib){
+    if(actual===null||actual===undefined)return'#f0ede8';
+    if(target===null||target===undefined)return'#f0ede8';
+    const ratio=lib?(target/actual):(actual/target);
+    if(ratio>=1.0)return'#dcfce7';
+    if(ratio>=0.9)return'#fef9c3';
+    return'#fee2e2';
+  }
+
+  let trendRows='';
+  TREND.forEach(r=>{
+    const m=getMet(r.met);
+    trendRows+='<tr><td class="kpif-mth-kpi">'+he(r.label)+'</td>';
+    MTHS.forEach((_,i)=>{
+      const actual=m?(m.actuals[i]!==undefined?m.actuals[i]:null):null;
+      const target=m?(m.targets[i]!==undefined?m.targets[i]:null):null;
+      const bg=mthBg(actual,target,r.lib);
+      const hasA=actual!==null&&actual!==undefined;
+      const hasTgt=target!==null&&target!==undefined;
+      trendRows+='<td class="kpif-mth-cell" style="background:'+bg+'">';
+      if(hasA)trendRows+='<div class="kpif-mth-act">'+fmt(actual,m.fmt)+'</div>';
+      if(hasTgt)trendRows+='<div class="kpif-mth-tgt">'+fmt(target,m.fmt)+'</div>';
+      trendRows+='</td>';
+    });
+    trendRows+='</tr>';
+  });
+
+  const trendHtml='<div class="kpif-wrap" style="margin-top:4px">'
+    +'<div class="kpif-title">Monthly Performance — Jan–Dec 2026</div>'
+    +'<div class="kpif-sub">Green = on/above target · Amber = within 10% below · Red = &gt;10% below · Grey = no data yet</div>'
+    +'<div class="kpif-tbl-wrap kpif-mth-wrap"><table class="kpif-table kpif-mth-tbl">'
+    +'<thead><tr><th class="kpif-mth-kpi-h">KPI</th>'
+    +MTHS.map(m=>'<th class="kpif-mth-h">'+m+'</th>').join('')
+    +'</tr></thead>'
+    +'<tbody>'+trendRows+'</tbody>'
+    +'</table></div>'
+    +'</div>';
+
+  // ── SECTION 3: CHANNEL GROUPS ──
+  const GROUPS=[
+    {lbl:'Conversion & Revenue',mets:['Blended ROAS','CPA — Cost per Ticket (SEK)','Ticket Purchases from Paid','Revenue from Paid Ads (SEK)'],cols:4,bars:true},
+    {lbl:'Google Search',mets:['Google Search CTR %','Google Search CPC (SEK)'],cols:2},
+    {lbl:'Meta',mets:['Meta CTR %','Meta CPM (SEK)'],cols:2},
+    {lbl:'TikTok',mets:['TikTok CTR %','TikTok CPC (SEK)'],cols:2},
+    {lbl:'Spend',mets:['Media Spend (SEK)'],cols:1},
+  ];
+
+  let grpH='';
+  GROUPS.forEach(({lbl,mets,cols,bars})=>{
+    grpH+='<div class="paid-section-lbl">'+he(lbl)+'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:10px;margin-bottom:16px">';
+    mets.forEach(ml=>{
+      const m=getMet(ml);
+      if(!m){
+        grpH+='<div class="paid-card" style="opacity:.4"><div class="paid-card-lbl">'+he(ml)+'</div><div class="paid-card-val pc-na">Not tracked</div></div>';
+        return;
+      }
+      const actual=curActual(m);
+      const target=bestTarget(m);
+      const lib=m.lower_is_better||false;
+      const minVal=parseMinNum(m.bench);
+      const st=kpiSt(actual,target,minVal,lib);
+      const bt=parseBT(m.bench||'');
+      const hasA=actual!==null;
+      let barH='';
+      if(bars&&hasA&&target!==null){
+        const pct=Math.min(100,lib?(target/actual)*100:(actual/target)*100);
+        const bc=st.cl==='p-g'?'#8c6a2f':(st.cl==='p-y'?'#eab308':'#ef4444');
+        barH='<div style="margin-top:8px;height:4px;background:#ece8e1;border-radius:2px"><div style="width:'+pct.toFixed(0)+'%;height:4px;background:'+bc+';border-radius:2px"></div></div>';
+      }
+      grpH+='<div class="paid-card">'
+        +'<div class="paid-card-lbl">'+he(m.label)+'</div>'
+        +'<div class="paid-card-val'+(hasA?'':' pc-na')+'">'+(hasA?fmt(actual,m.fmt):'Starts Apr')+'</div>'
+        +'<div class="paid-card-thr">'
+        +(bt.min!=='—'?'<span class="pthr-min">Min '+he(bt.min)+'</span>':'')
+        +(target!==null?'<span class="pthr-tgt">Tgt '+fmt(target,m.fmt)+'</span>':'')
+        +(bt.stretch!=='—'?'<span class="pthr-str">↑ '+he(bt.stretch)+'</span>':'')
+        +'</div>'
+        +(hasA?'<div class="paid-card-pill"><span class="pill '+st.cl+'">'+st.label+'</span></div>':'')
+        +barH
+        +'</div>';
+    });
+    grpH+='</div>';
+  });
+
+  return'<div style="padding:0 0 12px">'+focusHtml+trendHtml+grpH+'</div>';
+}
+
 function buildAEPaidPulseHTML(){
   const d=DATA.ae;
   const sec=d.sections.find(s=>s.id==='paid');
@@ -3204,8 +3440,7 @@ function init(){
   buildCards('cards-ae','ae');
   buildTables('tables-atm','atm');
   buildTables('tables-ae','ae');
-  buildATMPulse();
-  selVisitorMonth('ytd', document.querySelector('.vis-month-btn.vm-active'));
+  buildVisitorPanels(activeVisitorMonth);
 }
 init();
 </script>
