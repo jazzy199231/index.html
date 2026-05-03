@@ -313,7 +313,7 @@ function pwCheck(){
   }
 }
 </script>
-<div class="top-bar"><h1>KPI Dashboard 2026</h1><div class="top-meta">ABBA The Museum &amp; Avicii Experience &nbsp;·&nbsp; Jan–Dec 2026 &nbsp;·&nbsp; Last updated: March 2026 &nbsp;·&nbsp; YTD: Jan–Mar</div></div>
+<div class="top-bar"><h1>KPI Dashboard 2026</h1><div class="top-meta">ABBA The Museum &amp; Avicii Experience &nbsp;·&nbsp; Jan–Dec 2026 &nbsp;·&nbsp; Last updated: April 2026 &nbsp;·&nbsp; YTD: Jan–Apr</div></div>
 <div class="brand-tabs">
   <button class="brand-tab active-tr" onclick="sw('visitors',this)">Visitors</button>
   <button class="brand-tab" onclick="sw('atm-pulse',this)">ABBA The Museum 2026</button>
@@ -331,10 +331,11 @@ function pwCheck(){
 <div id="view-visitors">
   <div class="vis-month-bar">
     <span class="vis-month-lbl">Period:</span>
-    <button class="vis-month-btn vm-active" onclick="selVisitorMonth('jan',this)">January</button>
+    <button class="vis-month-btn" onclick="selVisitorMonth('jan',this)">January</button>
     <button class="vis-month-btn" onclick="selVisitorMonth('feb',this)">February</button>
     <button class="vis-month-btn" onclick="selVisitorMonth('mar',this)">March</button>
-    <button class="vis-month-btn" onclick="selVisitorMonth('ytd',this)">YTD (Jan–Mar)</button>
+    <button class="vis-month-btn vm-active" onclick="selVisitorMonth('apr',this)">April</button>
+    <button class="vis-month-btn" onclick="selVisitorMonth('ytd',this)">YTD (Jan–Apr)</button>
   </div>
   <div class="vis-panels">
     <div id="vis-panel-atm" class="vis-panel"></div>
@@ -367,19 +368,19 @@ atm:{
   sections:[
   {id:'visit',title:'1 · Visitation & Revenue',brand:'atm',metrics:[
     {label:'Visitors',fmt:'num',
-     actuals:[16844,19227,21483,N,N,N,N,N,N,N,N,N],
+     actuals:[16844,19227,21483,28912,N,N,N,N,N,N,N,N],
      targets:[17383,19883,23000,31126,42068,49811,68178,64636,35778,34670,21150,29026],
      bench:'YTD: 57,554 visitors (93.6% of YTD target 61,522) · Mar CM: 21,483 vs 23,000 (93.4%) · YoY: CM +4%, YTD -1% · Full-year target: 434,517'},
     {label:'Ticket Revenue (SEK)',fmt:'sek',
-     actuals:[3669000,4188000,5143243,N,N,N,N,N,N,N,N,N],
+     actuals:[3669000,4188000,5143243,8071534,N,N,N,N,N,N,N,N],
      targets:[3928558,4493558,5874755,7034476,9507368,11257286,15408228,14607736,8085828,7835420,4779900,6559876],
      bench:'YTD: ~13.0M SEK (per visitor insight) · Mar CM: 5.14M SEK vs budget 5.87M (87.5%) · Jan–Feb derived from YTD total'},
     {label:'Avg Ticket Price (SEK)',fmt:'num',
-     actuals:[N,N,239,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,239,279,N,N,N,N,N,N,N,N],
      targets:[226,226,255,226,226,226,226,226,226,226,226,226],
      bench:'Mar CM ATP: 239 SEK vs budget 255 SEK (93.7%) · YTD avg ATP: 226 SEK · Annual benchmark: 226 SEK'},
     {label:'YoY Visitor Growth %',fmt:'pct',
-     actuals:[N,N,4.0,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,4.0,-5,N,N,N,N,N,N,N,N],
      targets:[5,5,5,5,5,5,5,5,5,5,5,5],
      bench:'Mar CM: +4% YoY · YTD: -1% YoY · Target: +5% · Q2 paid media critical to recover YTD gap'},
     {label:'Occupancy %',fmt:'pct',
@@ -1182,6 +1183,17 @@ const VI={
         region_ytd:[{n:'Europe',p:45},{n:'Nordics',p:8},{n:'UK',p:12},{n:'Sweden',p:16},{n:'USA',p:8},{n:'RoW',p:11}],
         top10_cm:[{c:'Sweden',p:16},{c:'United Kingdom',p:12},{c:'Germany',p:11},{c:'United States',p:10},{c:'France',p:6},{c:'Finland',p:4},{c:'Netherlands',p:3},{c:'Spain',p:3},{c:'Austria',p:3},{c:'Denmark',p:2}],
         top10_ytd:[{c:'Sweden',p:16},{c:'United Kingdom',p:12},{c:'Germany',p:9},{c:'United States',p:8},{c:'France',p:7},{c:'Finland',p:4},{c:'Australia',p:3},{c:'Netherlands',p:3},{c:'Spain',p:3},{c:'Poland',p:3}]
+      },
+      apr:{
+        visitors_cm:28912,visitors_ytd:86466,
+        yoy_cm:-5,yoy_ytd:-2,
+        ticket_cm:8071534,ticket_ytd:21071534,
+        atp_cm:279,atp_ytd:244,
+        occupancy:null,
+        swedish_ytd:null,intl_ytd:null,
+        countries:null,
+        region_cm:[],region_ytd:[],
+        top10_cm:[],top10_ytd:[]
       }
     }
   },
@@ -1452,7 +1464,7 @@ function buildTables(id,brand){
 
 
 // ── VISITOR INSIGHT ENGINE ────────────────────────────────────────────
-let activeVisitorMonth='mar';
+let activeVisitorMonth='apr';
 
 function selVisitorMonth(mo,el){
   document.querySelectorAll('.vis-month-btn').forEach(b=>b.classList.remove('vm-active'));
@@ -2614,12 +2626,12 @@ function buildATMPulseOverviewHTML(){
   // Business Output — VI for YTD (visitor actuals as proxy)
   const visitSec=atm.sections.find(x=>x.id==='visit');
   const visitMet=visitSec?visitSec.metrics.find(x=>x.label==='Visitors'):null;
-  const visTarget=visitMet?ytdTarget([16844,19227,21483],visitMet.targets,'num'):null;
-  const visActual=VI.atm.months.mar.visitors_ytd;
+  const visTarget=visitMet?ytdTarget([16844,19227,21483,28912],visitMet.targets,'num'):null;
+  const visActual=VI.atm.months.apr.visitors_ytd;
   const revMet=visitSec?visitSec.metrics.find(x=>x.label==='Ticket Revenue (SEK)'):null;
-  const revTarget=revMet?ytdTarget([16844,19227,21483],revMet.targets,'sek'):null;
-  const revActual=VI.atm.months.mar.ticket_ytd;
-  const yoyYTD=VI.atm.months.mar.yoy_ytd;
+  const revTarget=revMet?ytdTarget([16844,19227,21483,28912],revMet.targets,'sek'):null;
+  const revActual=VI.atm.months.apr.ticket_ytd;
+  const yoyYTD=VI.atm.months.apr.yoy_ytd;
 
   const ticketPaid=getLatest('paid','Ticket Purchases from Paid');
   const igReach=getLatest('ig','Reach');
@@ -2674,7 +2686,7 @@ function buildATMPulseOverviewHTML(){
       ctx+=(ctx?' · ':'')+'YoY: <span class="'+ycl+'">'+(yoyYTD>=0?'+':'')+yoyYTD+'%</span>';
     }
     if(!ctx)ctx='Inväntar data';
-    return mkMet('Besökare YTD · jan–mar',valStr,cl,bp,ctx);
+    return mkMet('Besökare YTD · jan–apr',valStr,cl,bp,ctx);
   }
 
   function revMetFn(){
@@ -2688,7 +2700,7 @@ function buildATMPulseOverviewHTML(){
       const pcl=p>=100?'vp':(p>=90?'vw':'vn');
       ctx='Mål '+fmt(t,'sek')+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
     }else ctx='Inväntar data';
-    return mkMet('Intäkter YTD · jan–mar',valStr,cl,bp,ctx);
+    return mkMet('Intäkter YTD · jan–apr',valStr,cl,bp,ctx);
   }
 
   function roasMetFn(){
@@ -2716,7 +2728,7 @@ function buildATMPulseOverviewHTML(){
   return'<div class="pulse-wrap">'
     +'<div class="ov-hdr">'
     +'<span class="ov-hdr-title">ABBA The Museum — KPI Pulse</span>'
-    +'<span class="ov-hdr-date">Jan – Mar 2026 · uppdaterad mars 2026</span>'
+    +'<span class="ov-hdr-date">Jan – Apr 2026 · uppdaterad april 2026</span>'
     +'</div>'
     +'<hr class="ov-rule">'
 
