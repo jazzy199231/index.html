@@ -783,23 +783,23 @@ ae:{
   sections:[
   {id:'visit',title:'1 · Visitation & Revenue',brand:'ae',metrics:[
     {label:'Visitors',fmt:'num',
-     actuals:[3087,3366,3194,N,N,N,N,N,N,N,N,N],
+     actuals:[3087,3366,3194,3819,N,N,N,N,N,N,N,N],
      targets:[4041,5234,4515,5590,5597,5326,8392,8939,4823,5681,4548,5622],
      bench:'YTD: 9,647 visitors vs target 13,790 (70.0%) · Mar: 3,194 vs 4,515 (70.7%) · YoY -21% · 2026 full-year target: 68,308'},
     {label:'Ticket Revenue (SEK)',fmt:'sek',
-     actuals:[N,N,700000,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,700000,842587,N,N,N,N,N,N,N,N],
      targets:[820323,1062502,916545,1134770,1136191,1081178,1703576,1814617,979069,1153243,922944,1141266],
      bench:'Mar actual: 0.7M SEK (from visitor insight) · YTD: ~2.0M SEK · Full-year target ~13.9M SEK'},
     {label:'Avg Ticket Price (SEK)',fmt:'num',
-     actuals:[N,N,216,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,216,221,N,N,N,N,N,N,N,N],
      targets:[203,203,203,203,203,203,203,203,203,203,203,203],
      bench:'Mar CM ATP: 216 SEK · YTD avg ATP: 200 SEK · Annual benchmark: 203 SEK'},
     {label:'YoY Growth %',fmt:'pct',
-     actuals:[N,N,-21.0,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,-21.0,-23,N,N,N,N,N,N,N,N],
      targets:[12,12,12,12,12,12,12,12,12,12,12,12],
      bench:'Mar CM: -21% · YTD: -21% vs 2025 base · Target +12% · Paid media from Apr critical to close gap'},
     {label:'Occupancy %',fmt:'pct',
-     actuals:[N,N,13,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,13,14,N,N,N,N,N,N,N,N],
      targets:[12,13,13,21,20,20,30,32,18,20,17,20],
      bench:'Mar actual: 13% ✓ On target (13%) · Peak: Jul–Aug 30–32% · Low occupancy = growth headroom'},
     {label:'% Swedish Visitors',fmt:'pct',
@@ -1238,6 +1238,17 @@ const VI={
         region_ytd:[{n:'Europe',p:41},{n:'Nordics',p:9},{n:'RoW',p:9},{n:'Sweden',p:25},{n:'UK',p:10},{n:'USA',p:6}],
         top10_cm:[{c:'Sweden',p:16},{c:'United Kingdom',p:11},{c:'France',p:10},{c:'Germany',p:7},{c:'Italy',p:7},{c:'USA',p:6},{c:'Finland',p:5},{c:'Australia',p:4},{c:'Netherlands',p:4},{c:'Estonia',p:2}],
         top10_ytd:[{c:'Sweden',p:17},{c:'United Kingdom',p:11},{c:'France',p:9},{c:'Germany',p:6},{c:'Italy',p:6},{c:'USA',p:6},{c:'Finland',p:5},{c:'Netherlands',p:4},{c:'Australia',p:3},{c:'Switzerland',p:2}]
+      },
+      apr:{
+        visitors_cm:3819,visitors_ytd:13466,
+        yoy_cm:-23,yoy_ytd:-22,
+        ticket_cm:842587,ticket_ytd:2842587,
+        atp_cm:221,atp_ytd:211,
+        occupancy:14,
+        swedish_ytd:null,intl_ytd:null,
+        countries:null,
+        region_cm:[],region_ytd:[],
+        top10_cm:[],top10_ytd:[]
       }
     }
   }
@@ -1993,12 +2004,12 @@ function buildPulseOverviewHTML(){
   // Business Output — VI for YTD (AE visit actuals unreliable)
   const visitSec=ae.sections.find(x=>x.id==='visit');
   const visitMet=visitSec?visitSec.metrics.find(x=>x.label==='Visitors'):null;
-  const visTarget=visitMet?ytdTarget([3087,3366,3194],visitMet.targets,'num'):null;
-  const visActual=VI.ae.months.mar.visitors_ytd;
+  const visTarget=visitMet?ytdTarget([3087,3366,3194,3819],visitMet.targets,'num'):null;
+  const visActual=VI.ae.months.apr.visitors_ytd;
   const revMet=visitSec?visitSec.metrics.find(x=>x.label==='Ticket Revenue (SEK)'):null;
-  const revTarget=revMet?ytdTarget([3087,3366,3194],revMet.targets,'sek'):null;
-  const revActual=VI.ae.months.mar.ticket_ytd;
-  const yoyYTD=VI.ae.months.mar.yoy_ytd;
+  const revTarget=revMet?ytdTarget([3087,3366,3194,3819],revMet.targets,'sek'):null;
+  const revActual=VI.ae.months.apr.ticket_ytd;
+  const yoyYTD=VI.ae.months.apr.yoy_ytd;
 
   const ticketPaid=getLatest('paid','Ticket Purchases from Paid');
   const igReach=getLatest('ig','Reach');
@@ -2053,7 +2064,7 @@ function buildPulseOverviewHTML(){
       ctx+=(ctx?' · ':'')+'YoY: <span class="'+ycl+'">'+(yoyYTD>=0?'+':'')+yoyYTD+'%</span>';
     }
     if(!ctx)ctx='Inväntar data';
-    return mkMet('Besökare YTD · jan–mar',valStr,cl,bp,ctx);
+    return mkMet('Besökare YTD · jan–apr',valStr,cl,bp,ctx);
   }
 
   // Revenue YTD
@@ -2068,7 +2079,7 @@ function buildPulseOverviewHTML(){
       const pcl=p>=100?'vp':(p>=90?'vw':'vn');
       ctx='Mål '+fmt(t,'sek')+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
     }else ctx='Inväntar data';
-    return mkMet('Intäkter YTD · jan–mar',valStr,cl,bp,ctx);
+    return mkMet('Intäkter YTD · jan–apr',valStr,cl,bp,ctx);
   }
 
   // ROAS placeholder
@@ -2096,7 +2107,7 @@ function buildPulseOverviewHTML(){
   return'<div class="pulse-wrap">'
     +'<div class="ov-hdr">'
     +'<span class="ov-hdr-title">Avicii Experience — KPI Pulse</span>'
-    +'<span class="ov-hdr-date">Jan – Mar 2026 · uppdaterad mars 2026</span>'
+    +'<span class="ov-hdr-date">Jan – Apr 2026 · uppdaterad april 2026</span>'
     +'</div>'
     +'<hr class="ov-rule">'
 
