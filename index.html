@@ -1197,11 +1197,11 @@ const VI={
         top10_cm:[],top10_ytd:[]
       },
       may:{
-        visitors_cm:null,visitors_ytd:null,
-        yoy_cm:null,yoy_ytd:null,
+        visitors_cm:43077,visitors_ytd:129555,
+        yoy_cm:4,yoy_ytd:0,
         ticket_cm:null,ticket_ytd:null,
         atp_cm:null,atp_ytd:null,
-        occupancy:null,
+        occupancy:61,
         swedish_ytd:null,intl_ytd:null,
         countries:null,
         region_cm:[],region_ytd:[],
@@ -1263,8 +1263,8 @@ const VI={
         top10_cm:[],top10_ytd:[]
       },
       may:{
-        visitors_cm:null,visitors_ytd:null,
-        yoy_cm:null,yoy_ytd:null,
+        visitors_cm:3787,visitors_ytd:17253,
+        yoy_cm:-24,yoy_ytd:-22,
         ticket_cm:null,ticket_ytd:null,
         atp_cm:null,atp_ytd:null,
         occupancy:null,
@@ -1602,7 +1602,7 @@ function buildVisitorPanel(brand,mo){
   <div class="vis-occ-grid">`;
 
   const moNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const atmActOcc=[32,40,36,48,null,null,null,null,null,null,null,null];
+  const atmActOcc=[32,40,36,48,61,null,null,null,null,null,null,null];
   const aeActOcc=[12,15,13,14,null,null,null,null,null,null,null,null];
   const actOcc=brand==='atm'?atmActOcc:aeActOcc;
 
@@ -2027,12 +2027,12 @@ function buildPulseOverviewHTML(){
   // Business Output — VI for YTD (AE visit actuals unreliable)
   const visitSec=ae.sections.find(x=>x.id==='visit');
   const visitMet=visitSec?visitSec.metrics.find(x=>x.label==='Visitors'):null;
-  const visTarget=visitMet?ytdTarget([3087,3366,3194,3819,null],visitMet.targets,'num'):null;
-  const visActual=VI.ae.months.apr.visitors_ytd;
+  const visTarget=visitMet?ytdTarget([3087,3366,3194,3819,3787],visitMet.targets,'num'):null;
+  const visActual=VI.ae.months.may.visitors_ytd;
   const revMet=visitSec?visitSec.metrics.find(x=>x.label==='Ticket Revenue (SEK)'):null;
-  const revTarget=revMet?ytdTarget([3087,3366,3194,3819],revMet.targets,'sek'):null;
-  const revActual=VI.ae.months.apr.ticket_ytd;
-  const yoyYTD=VI.ae.months.apr.yoy_ytd;
+  const revTarget=revMet?ytdTarget([3087,3366,3194,3819,3787],revMet.targets,'sek'):null;
+  const revActual=VI.ae.months.may.ticket_ytd;
+  const yoyYTD=VI.ae.months.may.yoy_ytd;
 
   const ticketPaid=getLatest('paid','Ticket Purchases from Paid');
   const igReach=getLatest('ig','Reach');
@@ -2087,7 +2087,7 @@ function buildPulseOverviewHTML(){
       ctx+=(ctx?' · ':'')+'YoY: <span class="'+ycl+'">'+(yoyYTD>=0?'+':'')+yoyYTD+'%</span>';
     }
     if(!ctx)ctx='Inväntar data';
-    return mkMet('Besökare YTD · jan–apr',valStr,cl,bp,ctx);
+    return mkMet('Besökare YTD · jan–maj',valStr,cl,bp,ctx);
   }
 
   // Revenue YTD
@@ -2102,7 +2102,7 @@ function buildPulseOverviewHTML(){
       const pcl=p>=100?'vp':(p>=90?'vw':'vn');
       ctx='Mål '+fmt(t,'sek')+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
     }else ctx='Inväntar data';
-    return mkMet('Intäkter YTD · jan–apr',valStr,cl,bp,ctx);
+    return mkMet('Intäkter YTD · jan–maj',valStr,cl,bp,ctx);
   }
 
   // ROAS placeholder
@@ -2130,7 +2130,7 @@ function buildPulseOverviewHTML(){
   return'<div class="pulse-wrap">'
     +'<div class="ov-hdr">'
     +'<span class="ov-hdr-title">Avicii Experience — KPI Pulse</span>'
-    +'<span class="ov-hdr-date">Jan – Apr 2026 · uppdaterad april 2026</span>'
+    +'<span class="ov-hdr-date">Jan – Maj 2026 · uppdaterad maj 2026</span>'
     +'</div>'
     +'<hr class="ov-rule">'
 
@@ -2660,12 +2660,12 @@ function buildATMPulseOverviewHTML(){
   // Business Output — VI for YTD (visitor actuals as proxy)
   const visitSec=atm.sections.find(x=>x.id==='visit');
   const visitMet=visitSec?visitSec.metrics.find(x=>x.label==='Visitors'):null;
-  const visTarget=visitMet?ytdTarget([16844,19227,21483,28912],visitMet.targets,'num'):null;
-  const visActual=VI.atm.months.apr.visitors_ytd;
+  const visTarget=visitMet?ytdTarget([16844,19227,21483,28912,43077],visitMet.targets,'num'):null;
+  const visActual=VI.atm.months.may.visitors_ytd;
   const revMet=visitSec?visitSec.metrics.find(x=>x.label==='Ticket Revenue (SEK)'):null;
-  const revTarget=revMet?ytdTarget([16844,19227,21483,28912],revMet.targets,'sek'):null;
-  const revActual=VI.atm.months.apr.ticket_ytd;
-  const yoyYTD=VI.atm.months.apr.yoy_ytd;
+  const revTarget=revMet?ytdTarget([16844,19227,21483,28912,43077],revMet.targets,'sek'):null;
+  const revActual=VI.atm.months.may.ticket_ytd;
+  const yoyYTD=VI.atm.months.may.yoy_ytd;
 
   const ticketPaid=getLatest('paid','Ticket Purchases from Paid');
   const igReach=getLatest('ig','Reach');
@@ -2720,7 +2720,7 @@ function buildATMPulseOverviewHTML(){
       ctx+=(ctx?' · ':'')+'YoY: <span class="'+ycl+'">'+(yoyYTD>=0?'+':'')+yoyYTD+'%</span>';
     }
     if(!ctx)ctx='Inväntar data';
-    return mkMet('Besökare YTD · jan–apr',valStr,cl,bp,ctx);
+    return mkMet('Besökare YTD · jan–maj',valStr,cl,bp,ctx);
   }
 
   function revMetFn(){
@@ -2734,7 +2734,7 @@ function buildATMPulseOverviewHTML(){
       const pcl=p>=100?'vp':(p>=90?'vw':'vn');
       ctx='Mål '+fmt(t,'sek')+' · <span class="'+pcl+'">'+p.toFixed(0)+'%</span>';
     }else ctx='Inväntar data';
-    return mkMet('Intäkter YTD · jan–apr',valStr,cl,bp,ctx);
+    return mkMet('Intäkter YTD · jan–maj',valStr,cl,bp,ctx);
   }
 
   function roasMetFn(){
@@ -2762,7 +2762,7 @@ function buildATMPulseOverviewHTML(){
   return'<div class="pulse-wrap">'
     +'<div class="ov-hdr">'
     +'<span class="ov-hdr-title">ABBA The Museum — KPI Pulse</span>'
-    +'<span class="ov-hdr-date">Jan – Apr 2026 · uppdaterad april 2026</span>'
+    +'<span class="ov-hdr-date">Jan – Maj 2026 · uppdaterad maj 2026</span>'
     +'</div>'
     +'<hr class="ov-rule">'
 
