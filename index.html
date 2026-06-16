@@ -313,7 +313,7 @@ function pwCheck(){
   }
 }
 </script>
-<div class="top-bar"><h1>KPI Dashboard 2026</h1><div class="top-meta">ABBA The Museum &amp; Avicii Experience &nbsp;·&nbsp; Jan–Dec 2026 &nbsp;·&nbsp; Last updated: April 2026 &nbsp;·&nbsp; YTD: Jan–Apr</div></div>
+<div class="top-bar"><h1>KPI Dashboard 2026</h1><div class="top-meta">ABBA The Museum &amp; Avicii Experience &nbsp;·&nbsp; Jan–Dec 2026 &nbsp;·&nbsp; Last updated: May 2026 &nbsp;·&nbsp; YTD: Jan–Apr (visitors) · Jan–May (paid)</div></div>
 <div class="brand-tabs">
   <button class="brand-tab active-tr" onclick="sw('visitors',this)">Visitors</button>
   <button class="brand-tab" onclick="sw('atm-pulse',this)">ABBA The Museum 2026</button>
@@ -334,8 +334,9 @@ function pwCheck(){
     <button class="vis-month-btn" onclick="selVisitorMonth('jan',this)">January</button>
     <button class="vis-month-btn" onclick="selVisitorMonth('feb',this)">February</button>
     <button class="vis-month-btn" onclick="selVisitorMonth('mar',this)">March</button>
-    <button class="vis-month-btn vm-active" onclick="selVisitorMonth('apr',this)">April</button>
-    <button class="vis-month-btn" onclick="selVisitorMonth('ytd',this)">YTD (Jan–Apr)</button>
+    <button class="vis-month-btn" onclick="selVisitorMonth('apr',this)">April</button>
+    <button class="vis-month-btn vm-active" onclick="selVisitorMonth('may',this)">May</button>
+    <button class="vis-month-btn" onclick="selVisitorMonth('ytd',this)">YTD (Jan–May)</button>
   </div>
   <div class="vis-panels">
     <div id="vis-panel-atm" class="vis-panel"></div>
@@ -402,51 +403,51 @@ atm:{
   ],note:'Mar insight: YTD 57,554 visitors (-1% YoY) with 13.0M SEK ticket revenue. CM visitors +4% YoY — positive trend. 84% international visitors confirm global audience; content and paid targeting should prioritise key source markets. Occupancy at 36% — on target.'},
   {id:'paid',title:'2 · Paid Media (Beet)',brand:'atm',metrics:[
     {label:'Media Spend (SEK)',fmt:'sek',
-     actuals:[0,0,0,9799,N,N,N,N,N,N,N,N],
+     actuals:[0,0,0,9799,14876,N,N,N,N,N,N,N],
      targets:[0,0,0,15000,15000,15000,15000,15000,15000,15000,15000,15000],
      bench:'Budget: 15,000 SEK/month · Q1: organic only · Paid media activates from Apr 2026'},
     {label:'Blended ROAS',fmt:'dec1',
-     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,N,12,N,N,N,N,N,N,N],
      targets:[30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0],
      bench:'Min: 15× · Target: 30× · Stretch: 60×+ · Based on 15K spend × ticket revenue'},
     {label:'CPA — Cost per Ticket (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,N,25,N,N,N,N,N,N,N],
      targets:[14,14,14,14,14,14,14,14,14,14,14,14],
      bench:'Min: ≤20 SEK · Target: ≤14 SEK · Stretch: ≤8 SEK · Budget ÷ ticket purchases'},
     {label:'Ticket Purchases from Paid',fmt:'num',
-     actuals:[N,N,N,321,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,321,580,N,N,N,N,N,N,N],
      targets:[2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000],
      bench:'Min: 1,000/mo · Target: 2,000/mo · Stretch: 3,200/mo (peak) · Beet delivery commitment'},
     {label:'Google Search CTR %',fmt:'pct',
-     actuals:[N,N,N,46.19,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,46.19,41.23,N,N,N,N,N,N,N],
      targets:[38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0,38.0],
      bench:'Min: ≥25% · Target: ≥38% · Measures ad relevance + keyword match quality'},
     {label:'Meta CTR %',fmt:'pct',
-     actuals:[N,N,N,2.18,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,2.18,0.48,N,N,N,N,N,N,N],
      targets:[1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5],
      bench:'Min: ≥1.0% · Target: ≥1.5% · Industry avg ~0.9% · Measures creative + audience quality'},
     {label:'Revenue from Paid Ads (SEK)',fmt:'sek',
-     actuals:[N,N,N,43680,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,43680,182015,N,N,N,N,N,N,N],
      targets:[450000,450000,450000,450000,450000,450000,450000,450000,450000,450000,450000,450000],
      bench:'Target: 15K spend × 30× ROAS = 450K SEK/month · Actual = ticket purchases × avg ticket price'},
     {label:'Google Search CPC (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,1.83,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,1.83,0.75,N,N,N,N,N,N,N],
      targets:[1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5],
      bench:'Min: ≤2.5 kr · Target: ≤1.5 kr · Stretch: ≤1.0 kr · Branded keywords. Spike signals competitor activity.'},
     {label:'Meta CPM (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,53.95,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,53.95,47.49,N,N,N,N,N,N,N],
      targets:[45,45,45,45,45,45,45,45,45,45,45,45],
      bench:'Min: ≤65 kr · Target: ≤45 kr · Stretch: ≤30 kr · Rises in Q4. Monitor closely.'},
     {label:'Meta CPC (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,2.47,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,2.47,9.95,N,N,N,N,N,N,N],
      targets:[8,8,8,8,8,8,8,8,8,8,8,8],
      bench:'Min: ≤12 kr · Target: ≤8 kr · Stretch: ≤5 kr · Above 12 kr = bid strategy or creative review.'},
     {label:'TikTok CTR %',fmt:'pct',
-     actuals:[N,N,N,2.34,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,2.34,0.66,N,N,N,N,N,N,N],
      targets:[0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21],
      bench:'Min: ≥0.15% · Target: ≥0.21% · Stretch: ≥0.30% · Below 0.15% = creative review needed.'},
     {label:'TikTok CPC (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,3.33,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,3.33,4.7,N,N,N,N,N,N,N],
      targets:[7,7,7,7,7,7,7,7,7,7,7,7],
      bench:'Min: ≤10 kr · Target: ≤7 kr · Stretch: ≤5 kr · TAS range 6–9 kr.'}
   ]},
@@ -955,51 +956,51 @@ ae:{
   ],note:'Mar insight: FB reach present (~100K) but traffic and conversion weak (260 clicks, 1,500 visits). Primarily a cross-post channel for AE. Native FB content would improve follower growth and engagement.'},
   {id:'paid',title:'5 · Paid Media (Beet)',brand:'ae',metrics:[
     {label:'Media Spend (SEK)',fmt:'sek',
-     actuals:[0,0,0,17653,N,N,N,N,N,N,N,N],
+     actuals:[0,0,0,17653,22306,N,N,N,N,N,N,N],
      targets:[0,0,0,15000,15000,15000,15000,15000,15000,15000,15000,15000],
      bench:'Budget: 15,000 SEK/month · Q1: organic only · Paid media activates from Apr 2026'},
     {label:'Blended ROAS',fmt:'dec1',
-     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,N,1,N,N,N,N,N,N,N],
      targets:[12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0],
      bench:'Min: 8× · Target: 12× · Stretch: 20×+ · Lower than ATM — smaller visitor base, higher CPA'},
     {label:'CPA — Cost per Ticket (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,7,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,7,N,297,N,N,N,N,N,N,N],
      targets:[35,35,35,35,35,35,35,35,35,35,35,35],
      bench:'Min: ≤50 SEK · Target: ≤35 SEK · Stretch: ≤20 SEK · Higher than ATM — smaller target audience'},
     {label:'Ticket Purchases from Paid',fmt:'num',
-     actuals:[N,N,6,111,N,N,N,N,N,N,N,N],
+     actuals:[N,N,6,111,75,N,N,N,N,N,N,N],
      targets:[480,480,480,480,480,480,480,480,480,480,480,480],
      bench:'Min: 350/mo · Target: 480/mo · Stretch: 600/mo · Beet delivery commitment · Mar: 6 conversions (26–27 Mar, partial month)'},
     {label:'TikTok CPM (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,N,14.4,N,N,N,N,N,N,N],
      targets:[18,18,18,18,18,18,18,18,18,18,18,18],
      bench:'Min: ≤22 SEK · Target: ≤18 SEK · AE audience skews younger — TikTok primary paid channel'},
     {label:'Meta CTR %',fmt:'pct',
-     actuals:[N,N,N,2.89,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,2.89,0.78,N,N,N,N,N,N,N],
      targets:[1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3],
      bench:'Min: ≥0.9% · Target: ≥1.3% · Reflects smaller but more targeted AE audience'},
     {label:'Revenue from Paid Ads (SEK)',fmt:'sek',
-     actuals:[N,N,N,17638,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,49494,19035,N,N,N,N,N,N,N],
      targets:[180000,180000,180000,180000,180000,180000,180000,180000,180000,180000,180000,180000],
      bench:'Target: 15K spend × 12× ROAS = 180K SEK/month · Actual = ticket purchases × 203 SEK avg ticket'},
     {label:'Google Search CTR %',fmt:'pct',
-     actuals:[N,N,N,27.26,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,27.26,19.66,N,N,N,N,N,N,N],
      targets:[30,30,30,30,30,30,30,30,30,30,30,30],
      bench:'Min: ≥22% · Target: ≥30% · Stretch: ≥38% · Branded avicii experience. TAS delivered 32%.'},
     {label:'Google Search CPC (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,4.14,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,4.14,4.23,N,N,N,N,N,N,N],
      targets:[2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5],
      bench:'Min: ≤4 kr · Target: ≤2.5 kr · Stretch: ≤2.0 kr · Higher competition than ATM. Monitor weekly.'},
     {label:'Meta CPM (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,62.97,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,62.97,56.05,N,N,N,N,N,N,N],
      targets:[22,22,22,22,22,22,22,22,22,22,22,22],
      bench:'Min: ≤30 kr · Target: ≤22 kr · Stretch: ≤15 kr · AE audience smaller — CPM lower than ATM.'},
     {label:'TikTok CTR %',fmt:'pct',
-     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,N,0.53,N,N,N,N,N,N,N],
      targets:[0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21,0.21],
      bench:'Min: ≥0.15% · Target: ≥0.21% · Stretch: ≥0.30% · TAS delivered 0.17–0.23%. Below 0.15% = creative review.'},
     {label:'TikTok CPC (SEK)',fmt:'num',lower_is_better:true,
-     actuals:[N,N,N,N,N,N,N,N,N,N,N,N],
+     actuals:[N,N,N,N,2.74,N,N,N,N,N,N,N],
      targets:[7,7,7,7,7,7,7,7,7,7,7,7],
      bench:'Min: ≤10 kr · Target: ≤7 kr · Stretch: ≤5 kr · TAS range 6.25–8.93 kr.'},
     {label:'Impressions (Paid)',fmt:'num',
@@ -1194,6 +1195,17 @@ const VI={
         countries:null,
         region_cm:[],region_ytd:[],
         top10_cm:[],top10_ytd:[]
+      },
+      may:{
+        visitors_cm:null,visitors_ytd:null,
+        yoy_cm:null,yoy_ytd:null,
+        ticket_cm:null,ticket_ytd:null,
+        atp_cm:null,atp_ytd:null,
+        occupancy:null,
+        swedish_ytd:null,intl_ytd:null,
+        countries:null,
+        region_cm:[],region_ytd:[],
+        top10_cm:[],top10_ytd:[]
       }
     }
   },
@@ -1245,6 +1257,17 @@ const VI={
         ticket_cm:842587,ticket_ytd:2842587,
         atp_cm:221,atp_ytd:211,
         occupancy:14,
+        swedish_ytd:null,intl_ytd:null,
+        countries:null,
+        region_cm:[],region_ytd:[],
+        top10_cm:[],top10_ytd:[]
+      },
+      may:{
+        visitors_cm:null,visitors_ytd:null,
+        yoy_cm:null,yoy_ytd:null,
+        ticket_cm:null,ticket_ytd:null,
+        atp_cm:null,atp_ytd:null,
+        occupancy:null,
         swedish_ytd:null,intl_ytd:null,
         countries:null,
         region_cm:[],region_ytd:[],
@@ -1475,7 +1498,7 @@ function buildTables(id,brand){
 
 
 // ── VISITOR INSIGHT ENGINE ────────────────────────────────────────────
-let activeVisitorMonth='apr';
+let activeVisitorMonth='may';
 
 function selVisitorMonth(mo,el){
   document.querySelectorAll('.vis-month-btn').forEach(b=>b.classList.remove('vm-active'));
@@ -1504,7 +1527,7 @@ function buildVisitorPanel(brand,mo){
 
   // Determine data slice
   const isYTD=mo==='ytd';
-  const mKey=isYTD?'mar':mo;
+  const mKey=isYTD?'may':mo;
   const md=vi.months[mKey];
   if(!md){document.getElementById('vis-panel-'+brand).innerHTML='<p style="padding:20px;color:#9a8f84">No data for this period</p>';return;}
 
@@ -1519,7 +1542,7 @@ function buildVisitorPanel(brand,mo){
   const occ_a=md.occupancy;
   const region=isYTD?md.region_ytd:md.region_cm;
   const top10=isYTD?md.top10_ytd:md.top10_cm;
-  const moLabel=isYTD?'YTD Jan–Mar':(['January','February','March'][['jan','feb','mar'].indexOf(mo)]);
+  const moLabel=isYTD?'YTD Jan–May':(['January','February','March','April','May'][['jan','feb','mar','apr','may'].indexOf(mo)]);
 
   function yoySpan(v){
     if(v===null||v===undefined)return '<span style="color:#bbb6aa">—</span>';
@@ -1530,7 +1553,7 @@ function buildVisitorPanel(brand,mo){
   function fmtV(v){if(v===null||v===undefined)return'—';if(v>=1000)return v.toLocaleString('en-SE');return String(v);}
 
   // Occupancy target for this month
-  const moIdx=['jan','feb','mar'].indexOf(mKey);
+  const moIdx=['jan','feb','mar','apr','may'].indexOf(mKey);
   const occTgt=vi.targets.occupancy[moIdx>=0?moIdx:2];
   const occCls=occ_a>=occTgt?'vp':(occ_a>=occTgt*0.9?'vw':'vn');
 
@@ -1579,8 +1602,8 @@ function buildVisitorPanel(brand,mo){
   <div class="vis-occ-grid">`;
 
   const moNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const atmActOcc=[32,40,36,null,null,null,null,null,null,null,null,null];
-  const aeActOcc=[12,15,13,null,null,null,null,null,null,null,null,null];
+  const atmActOcc=[32,40,36,48,null,null,null,null,null,null,null,null];
+  const aeActOcc=[12,15,13,14,null,null,null,null,null,null,null,null];
   const actOcc=brand==='atm'?atmActOcc:aeActOcc;
 
   for(let i=0;i<12;i++){
@@ -2004,7 +2027,7 @@ function buildPulseOverviewHTML(){
   // Business Output — VI for YTD (AE visit actuals unreliable)
   const visitSec=ae.sections.find(x=>x.id==='visit');
   const visitMet=visitSec?visitSec.metrics.find(x=>x.label==='Visitors'):null;
-  const visTarget=visitMet?ytdTarget([3087,3366,3194,3819],visitMet.targets,'num'):null;
+  const visTarget=visitMet?ytdTarget([3087,3366,3194,3819,null],visitMet.targets,'num'):null;
   const visActual=VI.ae.months.apr.visitors_ytd;
   const revMet=visitSec?visitSec.metrics.find(x=>x.label==='Ticket Revenue (SEK)'):null;
   const revTarget=revMet?ytdTarget([3087,3366,3194,3819],revMet.targets,'sek'):null;
